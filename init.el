@@ -56,7 +56,7 @@
 		:height 98 
 		:width normal 
 		:foundry "unknown" 
-		:family "Liberation Mono")))))
+		:family "Mono")))))
 
 (ido-mode t)
 (setq inhibit-splash-screen t)
@@ -98,6 +98,12 @@
                             '("\\.py\\'" flymake-pyflakes-init)))
 (setq python-python-command "ipython")
 (add-hook 'find-file-hook 'flymake-find-file-hook)
+
+;; make .mako files act like .html files
+(setq auto-mode-alist---
+      (append '(("\\.mako$" . html-mode)) auto-mode-alist))
+
+
 ;; end of python config
 
 
@@ -106,6 +112,19 @@
 
 
 ;; custom functions
+
+(defun toggle-fullscreen (&optional f)
+  (interactive)
+  (let ((current-value (frame-parameter nil 'fullscreen)))
+    (set-frame-parameter nil 'fullscreen
+                         (if (equal 'fullboth current-value)
+                             (if (boundp 'old-fullscreen) old-fullscreen nil)
+                           (progn (setq old-fullscreen current-value)
+                                  'fullboth)))))
+
+(global-set-key [f11] 'toggle-fullscreen)
+(add-hook 'after-make-frame-functions 'toggle-fullscreen)
+
 (defun insert-time ()
   (interactive)
   (insert (format-time-string "%c" (current-time))))
