@@ -15,12 +15,13 @@
   (package-refresh-contents))
 
 (progn
-  (dolist (mode '(tool-bar-mode scroll-bar-mode))
+  (dolist (mode '(tool-bar-mode scroll-bar-mode menu-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
 ;; packages
 (defvar packages 
   (quote (haskell-mode
+		  ido-ubiquitous
 		  magit
 		  paredit)))
 
