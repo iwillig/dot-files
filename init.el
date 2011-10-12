@@ -80,7 +80,9 @@
 ;; haskell config
 
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-
+;;; flymake mode seems to kill the haskell mode
+;;; not sure why
+(add-hook 'haskell-mode-hook (lambda () (flymake-mode -1)))
 ;; end haskell config
 
 ;; python config
