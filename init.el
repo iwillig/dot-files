@@ -13,10 +13,11 @@
 
 (when (not package-archive-contents)
   (package-refresh-contents))
-
 (progn
   (dolist (mode '(tool-bar-mode scroll-bar-mode menu-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
+
+(setq inhibit-splash-screen t)
 
 ;; packages
 (defvar packages 
@@ -58,11 +59,11 @@
 		:foundry "unknown" 
 		:family "Mono")))))
 
-(ido-mode t)
-(setq inhibit-splash-screen t)
 
-(defun load-paredit ()
-  (lambda () (paredit-mode +1)))
+;; ido mode stuff
+(require 'ido)
+(ido-mode t)
+
 
 ;; start of emacs lisp config
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
@@ -84,6 +85,7 @@
 
 ;; python config
 
+(add-hook 'python-mode-hook (lambda () (paredit-mode +1)))
 (setq tab-width 4)
 
 (when (load "flymake" t)
@@ -125,8 +127,10 @@
 (global-set-key [f11] 'toggle-fullscreen)
 (add-hook 'after-make-frame-functions 'toggle-fullscreen)
 
+
 (defun insert-time ()
   (interactive)
   (insert (format-time-string "%c" (current-time))))
 
+(global-set-key (kbd "C-c t") 'insert-time)
 
