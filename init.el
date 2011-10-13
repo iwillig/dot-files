@@ -22,9 +22,10 @@
 ;; packages
 (defvar packages 
   (quote (haskell-mode
-		  ido-ubiquitous
-		  magit
-		  paredit)))
+	  markdown-mode
+	  ido-ubiquitous
+	  magit
+	  paredit)))
 
 (dolist (p packages)
   (when (not (package-installed-p p))
