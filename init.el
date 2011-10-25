@@ -5,7 +5,7 @@
 (package-initialize)
 
 ;; only works on trunk version of emacs
-(load-theme 'wombat)
+(load-theme 'adwaita)
 
 ;; taken from the emacs starter kit 
 ;; thanks phil
@@ -14,14 +14,29 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 (progn
-  (dolist (mode '(tool-bar-mode scroll-bar-mode menu-bar-mode))
+  (dolist (mode '(tool-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
 (setq inhibit-splash-screen t)
 
+(windmove-default-keybindings)
+
+(global-set-key 
+ (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
+
+(global-set-key
+ (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
+;; ------------------------------
+;; end of emacs starter kit
+
+
+
 ;; packages
 (defvar packages 
   (quote (haskell-mode
+	  slime
+	  slime-repl
+	  clojure-mode
 	  markdown-mode
 	  ido-ubiquitous
 	  magit
@@ -31,16 +46,7 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
-(windmove-default-keybindings)
 
-(global-set-key 
- (kbd "C-x O") (lambda () (interactive) (other-window -1))) ;; back one
-
-(global-set-key
- (kbd "C-x C-o") (lambda () (interactive) (other-window 2))) ;; forward two
-
-;; ------------------------------
-;; end of emacs starter kit
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -58,7 +64,7 @@
 		:height 98 
 		:width normal 
 		:foundry "unknown" 
-		:family "Mono")))))
+		:family "Liberation Mono")))))
 
 
 ;; ido mode stuff
@@ -80,10 +86,17 @@
 
 ;; haskell config
 
+
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
 ;;; flymake mode seems to kill the haskell mode
 ;;; not sure why
 (add-hook 'haskell-mode-hook (lambda () (flymake-mode -1)))
+
+
 ;; end haskell config
 
 ;; python config
@@ -115,6 +128,22 @@
 ;; magit config
 (global-set-key (kbd "C-c g") 'magit-status)
 
+;; slime and clojure stuff for lisp development.
+;; taken from 
+;; http://riddell.us/ClojureSwankLeiningenWithEmacsOnLinux.html
+
+(add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
+
+(eval-after-load "slime" 
+  '(progn (slime-setup '(slime-repl))	
+	(defun paredit-mode-enable () (paredit-mode 1))	
+	(add-hook 'slime-mode-hook 'paredit-mode-enable)	
+	(add-hook 'slime-repl-mode-hook 'paredit-mode-enable)
+	(setq slime-protocol-version 'ignore)))
+
+(require 'slime)
+(slime-setup)
+
 
 ;; custom functions
 
@@ -137,3 +166,4 @@
 
 (global-set-key (kbd "C-c t") 'insert-time)
 
+(require 'org-install)
