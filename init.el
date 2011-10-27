@@ -3,6 +3,7 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
+(show-paren-mode t)
 
 ;; only works on trunk version of emacs
 (load-theme 'adwaita)
