@@ -6,7 +6,7 @@
 (show-paren-mode t)
 
 ;; only works on trunk version of emacs
-(load-theme 'adwaita)
+(load-theme 'tsdh-dark)
 
 ;; taken from the emacs starter kit 
 ;; thanks phil
@@ -15,7 +15,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 (progn
-  (dolist (mode '(tool-bar-mode scroll-bar-mode))
+  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
 (setq inhibit-splash-screen t)
@@ -145,6 +145,7 @@
 (require 'slime)
 (slime-setup)
 
+(add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
 
 ;; custom functions
 
