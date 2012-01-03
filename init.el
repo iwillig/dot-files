@@ -6,7 +6,7 @@
 (show-paren-mode t)
 
 ;; only works on trunk version of emacs
-(load-theme 'tsdh-dark)
+(load-theme 'wheatgrass)
 
 ;; taken from the emacs starter kit 
 ;; thanks phil
@@ -15,7 +15,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 (progn
-  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
+  (dolist (mode '(tool-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
 (setq inhibit-splash-screen t)
@@ -35,6 +35,8 @@
 ;; packages
 (defvar packages 
   (quote (haskell-mode
+	  yasnippet
+          yaml-mode
 	  slime
 	  slime-repl
 	  clojure-mode
@@ -102,8 +104,8 @@
 
 ;; python config
 
-(add-hook 'python-mode-hook (lambda () (paredit-mode +1)))
 (setq tab-width 4)
+(setq-default indent-tabs-mode nil)
 
 (when (load "flymake" t)
   (defun flymake-pyflakes-init ()
@@ -117,11 +119,6 @@
                             '("\\.py\\'" flymake-pyflakes-init)))
 (setq python-python-command "ipython")
 (add-hook 'find-file-hook 'flymake-find-file-hook)
-
-;; make .mako files act like .html files
-(setq auto-mode-alist---
-      (append '(("\\.mako$" . html-mode)) auto-mode-alist))
-
 
 ;; end of python config
 
@@ -168,4 +165,10 @@
 
 (global-set-key (kbd "C-c t") 'insert-time)
 
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+
 (require 'org-install)
+
+(require 'scheme)
+
+(require 'yaml-mode)
