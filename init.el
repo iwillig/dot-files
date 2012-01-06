@@ -3,6 +3,7 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
+
 (show-paren-mode t)
 
 ;; only works on trunk version of emacs
@@ -31,25 +32,26 @@
 ;; end of emacs starter kit
 
 
-
 ;; packages
 (defvar packages 
   (quote (haskell-mode
-	  yasnippet
+          ipython
+          python-mode
+          anything
+          anything-ipython
+          yasnippet
           yaml-mode
-	  slime
-	  slime-repl
-	  clojure-mode
-	  markdown-mode
-	  ido-ubiquitous
-	  magit
-	  paredit)))
+          slime
+          slime-repl
+          clojure-mode
+          markdown-mode
+          ido-ubiquitous
+          magit
+          paredit)))
 
 (dolist (p packages)
   (when (not (package-installed-p p))
     (package-install p)))
-
-
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -62,7 +64,7 @@
 		:strike-through nil 
 		:overline nil 
 		:underline nil 
-		:slant normal 
+		:slant normal
 		:weight normal 
 		:height 98 
 		:width normal 
@@ -78,31 +80,28 @@
 ;; start of emacs lisp config
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-
 ;; end of emacs lisp stuff
 
 ;; start of javascript mode
-
-(add-hook 'js-mode-hook (lambda () (paredit-mode +1)))
 (setq js-indent-level 2)
 ;; end of js mode
 
 ;; haskell config
-
-
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
 ;;; flymake mode seems to kill the haskell mode
 ;;; not sure why
 (add-hook 'haskell-mode-hook (lambda () (flymake-mode -1)))
-
-
 ;; end haskell config
 
 ;; python config
+(require 'python-mode)
+
+(setq ipython-command "/usr/bin/ipython")
+(setq py-python-command "/usr/bin/ipython")
+(require 'ipython)
 
 (setq tab-width 4)
 (setq-default indent-tabs-mode nil)
@@ -117,9 +116,16 @@
       (list "/home/ivan/.emacs.d/pycheckers" (list local-file))))
   (add-to-list 'flymake-allowed-file-name-masks
                             '("\\.py\\'" flymake-pyflakes-init)))
-(setq python-python-command "ipython")
+
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 
+(require 'anything)
+(require 'anything-ipython)
+(when (require 'anything-show-completion nil t)
+   (use-anything-show-completion 'anything-ipython-complete
+                                 '(length initial-pattern)))
+
+(add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 ;; end of python config
 
 
@@ -131,6 +137,7 @@
 ;; http://riddell.us/ClojureSwankLeiningenWithEmacsOnLinux.html
 
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
 
 (eval-after-load "slime" 
   '(progn (slime-setup '(slime-repl))	
