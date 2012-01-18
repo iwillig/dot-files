@@ -7,7 +7,7 @@
 (show-paren-mode t)
 
 ;; only works on trunk version of emacs
-(load-theme 'wheatgrass)
+(load-theme 'adwaita)
 
 ;; taken from the emacs starter kit 
 ;; thanks phil
@@ -76,6 +76,14 @@
 (require 'ido)
 (ido-mode t)
 
+;; yaml mode
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
+
+;; text mode
+(add-hook 'text-mode-hook (lambda () (flyspell-mode)))
+;; rst mode
+(add-hook 'rst-adjust-hook (lambda () (flyspell-mode)))
 
 ;; start of emacs lisp config
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
