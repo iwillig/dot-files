@@ -4,10 +4,12 @@
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
+(prefer-coding-system 'utf-8)
+
 (show-paren-mode t)
 
-;; only works on trunk version of emacs
-(load-theme 'adwaita)
+;; only works on trunk version of emacs(
+(load-theme 'wombat)
 
 ;; taken from the emacs starter kit 
 ;; thanks phil
@@ -16,7 +18,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 (progn
-  (dolist (mode '(tool-bar-mode scroll-bar-mode))
+  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
 (setq inhibit-splash-screen t)
@@ -35,10 +37,9 @@
 ;; packages
 (defvar packages 
   (quote (haskell-mode
+          scala-mode
           ipython
           python-mode
-          anything
-          anything-ipython
           yasnippet
           yaml-mode
           slime
@@ -58,18 +59,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:stipple nil 
-		:inverse-video nil 
-		:box nil 
-		:strike-through nil 
-		:overline nil 
-		:underline nil 
-		:slant normal
-		:weight normal 
-		:height 98 
-		:width normal 
-		:foundry "unknown" 
-		:family "Liberation Mono")))))
+ '(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "unknown" :family "Liberation Mono")))))
 
 
 ;; ido mode stuff
@@ -90,10 +80,6 @@
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 ;; end of emacs lisp stuff
 
-;; start of javascript mode
-(setq js-indent-level 2)
-;; end of js mode
-
 ;; haskell config
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
@@ -106,36 +92,60 @@
 
 ;; python config
 (require 'python-mode)
-
-(setq ipython-command "/usr/bin/ipython")
-(setq py-python-command "/usr/bin/ipython")
-(require 'ipython)
-
 (setq tab-width 4)
 (setq-default indent-tabs-mode nil)
 
+(defun jslint-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list "/home/ivan/.emacs.d/jscheckers" (list local-file))))
+
+(defun flymake-pyflakes-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+    (list "/home/ivan/.emacs.d/pycheckers" (list local-file))))
+
+
+
 (when (load "flymake" t)
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "/home/ivan/.emacs.d/pycheckers" (list local-file))))
+
+  (setq flymake-err-line-patterns
+        (cons '("Error:\\([[:digit:]]+\\):\\([[:digit:]]+\\):\\(.*\\)$"
+                nil 1 2 3)
+              flymake-err-line-patterns))
+
+  ;; (add-to-list 'flymake-allowed-file-name-masks
+  ;;              '("\\.js\\'" jslint-init))
+  
   (add-to-list 'flymake-allowed-file-name-masks
-                            '("\\.py\\'" flymake-pyflakes-init)))
+               '("\\.py\\'" flymake-pyflakes-init)))
 
 (add-hook 'find-file-hook 'flymake-find-file-hook)
-
-(require 'anything)
-(require 'anything-ipython)
-(when (require 'anything-show-completion nil t)
-   (use-anything-show-completion 'anything-ipython-complete
-                                 '(length initial-pattern)))
-
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 ;; end of python config
 
+
+;; javascript
+;; start of javascript mode
+(eval-after-load 'js
+  '(progn (setq js-indent-level 4)
+          (font-lock-add-keywords
+           'js-mode `(("\\(function *\\)("
+                       (0 (progn (compose-region (match-beginning 1)
+                                                 (match-end 1) "\u0192")
+                                 nil)))))))
+
+(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+
+;; end of js mode
+
+;;
 
 ;; magit config
 (global-set-key (kbd "C-c g") 'magit-status)
@@ -143,6 +153,8 @@
 ;; slime and clojure stuff for lisp development.
 ;; taken from 
 ;; http://riddell.us/ClojureSwankLeiningenWithEmacsOnLinux.html
+
+(setq slime-net-coding-system 'utf-8-unix)
 
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
@@ -159,6 +171,16 @@
 
 (add-hook 'slime-repl-mode-hook 'clojure-mode-font-lock-setup)
 
+(eval-after-load 'clojure-mode
+  '(define-clojure-indent
+     (describe 'defun)
+     (testing 'defun)
+     (given 'defun)
+     (using 'defun)
+     (with 'defun)
+     (it 'defun)
+     (do-it 'defun)))
+
 ;; custom functions
 
 (defun toggle-fullscreen (&optional f)
@@ -172,18 +194,48 @@
 
 (global-set-key [f11] 'toggle-fullscreen)
 (add-hook 'after-make-frame-functions 'toggle-fullscreen)
-
-
+ 
 (defun insert-time ()
   (interactive)
   (insert (format-time-string "%c" (current-time))))
 
-(global-set-key (kbd "C-c t") 'insert-time)
-
-(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+;; (global-set-key (kbd "C-c t") 'insert-time)
 
 (require 'org-install)
+(require 'yaml-mode)
 
 (require 'scheme)
 
-(require 'yaml-mode)
+;; for scheme mode
+(add-to-list 'auto-mode-alist '("\\.scm$" . scheme-mode))
+(load-file "/home/ivan/.emacs.d/geiser/elisp/geiser-load.el")
+(put 'downcase-region 'disabled nil)
+
+(require 'erc)
+
+(require 'erc-join)
+(erc-autojoin-mode 1)
+
+
+(erc-timestamp-mode t)
+(setq erc-timestamp-format "[%R-%m/%d]")
+
+(setq erc-autojoin-channels-alist
+      '(("freenode.net" 
+         "#opengeo" "#geonode"
+         "#socialplanning"
+         "#mapstory" "#geotools" "#geoserver" 
+         "#clojure" "#modilabs" "#zco" )))
+
+
+(defun irc ()
+  (interactive)
+  (erc :server "irc.freenode.net" :port 6667
+       :nick "iwillig" :password "<newyorkpass>" 
+       :full-name "Ivan Willig"))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("7acc0466fce1bc967ce1561c8c4fdcbf4358b4ae692577562a3ed747c109f9d7" default))))
