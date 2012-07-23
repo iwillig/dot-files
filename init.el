@@ -221,21 +221,33 @@
 (setq erc-timestamp-format "[%R-%m/%d]")
 
 (setq erc-autojoin-channels-alist
-      '(("freenode.net" 
+      '(("freenode.net"
          "#opengeo" "#geonode"
          "#socialplanning"
-         "#mapstory" "#geotools" "#geoserver" 
+         "#mapstory" "#geotools" "#geoserver"
          "#clojure" "#modilabs" "#zco" )))
 
 
 (defun irc ()
   (interactive)
   (erc :server "irc.freenode.net" :port 6667
-       :nick "iwillig" :password "<newyorkpass>" 
+       :nick "iwillig" :password "<newyorkpass>"
        :full-name "Ivan Willig"))
+
+(setq-default show-trailing-whitespace t)
+
+(eval-after-load 'clojure-mode
+  '(define-clojure-indent
+     (describe 'defun)
+     (testing 'defun)
+     (given 'defun)
+     (using 'defun)
+     (with 'defun)
+     (it 'defun)
+     (do-it 'defun)))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("7acc0466fce1bc967ce1561c8c4fdcbf4358b4ae692577562a3ed747c109f9d7" default))))
+ '(custom-safe-themes (quote ("6cfe5b2f818c7b52723f3e121d1157cf9d95ed8923dbc1b47f392da80ef7495d" "baed08a10ff9393ce578c3ea3e8fd4f8c86e595463a882c55f3bd617df7e5a45" default))))
