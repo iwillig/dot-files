@@ -109,12 +109,11 @@
          (local-file (file-relative-name
                       temp-file
                       (file-name-directory buffer-file-name))))
-    (list "/home/ivan/.emacs.d/pycheckers" (list local-file))))
+    (list "/home/ivan/.emacs.d/lintrunner.py" (list local-file))))
 
 
 
 (when (load "flymake" t)
-
   (setq flymake-err-line-patterns
         (cons '("Error:\\([[:digit:]]+\\):\\([[:digit:]]+\\):\\(.*\\)$"
                 nil 1 2 3)
