@@ -9,9 +9,9 @@
 (show-paren-mode t)
 
 ;; only works on trunk version of emacs(
-(load-theme 'wombat)
+(load-theme 'twilight t)
 
-;; taken from the emacs starter kit 
+;; taken from the emacs starter kit
 ;; thanks phil
 ;; ------------------------------
 
