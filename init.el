@@ -82,17 +82,6 @@
 (setq js2-indent-level 4)
 
 
-(eval-after-load 'js
-  '(progn 
-          (font-lock-add-keywords
-           'js-mode `(("\\(function *\\)("
-                       (0 (progn (compose-region (match-beginning 1)
-                                                 (match-end 1) "\u03BB")
-                                 nil)))))))
-
-
-
-
 ;;  ----------------------------------------
 ;; elisp mode
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
