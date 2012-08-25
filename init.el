@@ -1,5 +1,11 @@
 ;; #############################################
-;; Ivan Willig's emacs confi file for emacs 23
+;; Ivan Willig's emacs config file for emacs 23
+;; Includes supports working in
+;;    Javascript
+;;    Python
+;;    Clojure
+;;
+;; Requires package.el, emacs package system
 ;; 
 ;; #############################################
 
@@ -108,3 +114,5 @@
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
 
+
+(require 'yaml-mode)
