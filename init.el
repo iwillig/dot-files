@@ -56,11 +56,13 @@
 
 ;; ----------------------------------------
 ;; color theme stuff
-;; (require 'color-theme)
-;; (require 'color-theme-subdued)
-;; (color-theme-subdued)
+(require 'color-theme)
+(require 'color-theme-tomorrow)
+(require 'color-theme-subdued)
+;; (color-theme-tomorrow)
+(color-theme-tomorrow-night)
+;; (load-theme 'wombat)
 
-(load-theme 'wombat)
 (set-default-font "Terminus")
 
 ;; ----------------------------------------
