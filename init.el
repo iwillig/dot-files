@@ -39,7 +39,7 @@
 ;; safely install all of the packages
 (defun install-packages ()
   (let ((packages '(magit python-mode clojure-mode 
-                          nrepl
+                          nrepl quack
                           slime slime-repl paredit color-theme js2-mode)))
     (dolist (p packages)
       (when (not (package-installed-p p))
@@ -56,9 +56,11 @@
 
 ;; ----------------------------------------
 ;; color theme stuff
-(require 'color-theme)
-(require 'color-theme-subdued)
-(color-theme-subdued)
+;; (require 'color-theme)
+;; (require 'color-theme-subdued)
+;; (color-theme-subdued)
+
+(load-theme 'wombat)
 (set-default-font "Terminus")
 
 ;; ----------------------------------------
@@ -75,6 +77,20 @@
 (setq-default indent-tabs-mode nil)
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 
+(when (load "flymake" t)
+
+  (defun flymake-pyflakes-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+               'flymake-create-temp-inplace))
+       (local-file (file-relative-name
+            temp-file
+            (file-name-directory buffer-file-name))))
+      (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
+
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init)))
+
+(add-hook 'find-file-hook 'flymake-find-file-hook)
 ;; ----------------------------------------
 ;; javascript mode
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
@@ -102,6 +118,13 @@
 (require 'clojure-mode)
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
-
-
 (require 'yaml-mode)
+
+;; scheme mode
+
+(setq scheme-program-name "racket"
+      scheme-mit-dialect nil)
+
+(load-file "/home/ivan/.emacs.d/geiser/elisp/geiser.el")
+
+(require 'geiser)
