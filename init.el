@@ -9,7 +9,7 @@
 ;; 
 ;; #############################################
 
-(load-file "~/.emacs.d/package.el")
+
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -38,9 +38,10 @@
 ;; ----------------------------------------
 ;; safely install all of the packages
 (defun install-packages ()
-  (let ((packages '(magit python-mode clojure-mode 
-                          nrepl quack
-                          slime slime-repl paredit color-theme js2-mode)))
+  (let ((packages '(magit python-mode clojure-mode
+                          starter-kit starter-kit-lisp starter-kit-bindings starter-kit-ruby
+                          nrepl quack yaml-mode
+                          slime slime-repl paredit js2-mode)))
     (dolist (p packages)
       (when (not (package-installed-p p))
         (message "Installing package %s" p)
@@ -54,16 +55,9 @@
 (add-hook 'rst-adjust-hook (lambda () (flyspell-mode)))
 
 
-;; ----------------------------------------
-;; color theme stuff
-(require 'color-theme)
-(require 'color-theme-tomorrow)
-(require 'color-theme-subdued)
-;; (color-theme-tomorrow)
-(color-theme-tomorrow-night)
-;; (load-theme 'wombat)
+;; (load-theme 'wheatgrass)
 
-(set-default-font "Terminus")
+;; (set-default-font "Terminus")
 
 ;; ----------------------------------------
 ;; ido mode
@@ -81,6 +75,27 @@
 
 (when (load "flymake" t)
 
+
+  (defun flymake-jslint-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+		       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "jslint" (list "--terse" local-file))))
+
+  (setq flymake-err-line-patterns
+	(cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
+		1 2 nil 3)
+	      flymake-err-line-patterns))
+
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.js\\'" flymake-jslint-init))
+
+  (require 'flymake-cursor)
+
+
+  ;; python linting
   (defun flymake-pyflakes-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
                'flymake-create-temp-inplace))
@@ -89,8 +104,10 @@
             (file-name-directory buffer-file-name))))
       (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
 
+
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pyflakes-init)))
+
 
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 ;; ----------------------------------------
@@ -120,13 +137,27 @@
 (require 'clojure-mode)
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
+
+(define-clojure-indent
+  (defroutes 'defun)
+  (GET 2)
+  (POST 2)
+  (PUT 2)
+  (DELETE 2)
+  (HEAD 2)
+  (ANY 2)
+  (context 2))
+
 (require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;; scheme mode
 
 (setq scheme-program-name "racket"
       scheme-mit-dialect nil)
 
-(load-file "/home/ivan/.emacs.d/geiser/elisp/geiser.el")
+(put 'downcase-region 'disabled nil)
 
-(require 'geiser)
+
+(custom-set-faces
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 98 :width normal)))))
