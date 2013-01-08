@@ -9,6 +9,10 @@
 ;; 
 ;; #############################################
 
+(load-file "~/.emacs.d/package.el")
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
 (require 'package)
 (add-to-list 'package-archives
@@ -16,18 +20,20 @@
 
 (package-initialize)
 
+;; some global settings
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
 (windmove-default-keybindings)
 (setq inhibit-splash-screen t)
 (add-to-list 'load-path "~/.emacs.d/")
+(global-font-lock-mode 1)
+(put 'downcase-region 'disabled nil)
 
 ;; set up white space mode and enable it globally
 (require 'whitespace)
 
 (setq whitespace-style (quote
   ( spaces tabs newline space-mark tab-mark newline-mark)))
-;; (global-whitespace-mode 1)
 
 ;; turn off the tool and menu bar by default
 (progn
@@ -40,7 +46,10 @@
 (defun install-packages ()
   (let ((packages '(magit python-mode clojure-mode
                           starter-kit starter-kit-lisp starter-kit-bindings starter-kit-ruby
-                          nrepl quack yaml-mode
+                          flymake-cursor geiser
+                          rainbow-delimiters scheme-complete
+                          nrepl ;; quack
+                          yaml-mode
                           slime slime-repl paredit js2-mode)))
     (dolist (p packages)
       (when (not (package-installed-p p))
@@ -56,6 +65,11 @@
 
 
 ;; (load-theme 'wheatgrass)
+;; on older version of emacs use the color theme library
+(require 'color-theme)
+(load-file "~/.emacs.d/color-theme-tomorrow.el")
+(color-theme-tomorrow)
+;; (color-theme-tomorrow-night)
 
 ;; (set-default-font "Terminus")
 
@@ -115,7 +129,8 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
 (setq js2-indent-level 4)
-
+(setq js-indent-level 4)
+(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
 
 ;;  ----------------------------------------
 ;; elisp mode
@@ -148,15 +163,33 @@
   (ANY 2)
   (context 2))
 
+;; yaml-mode info
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;; scheme mode
+;;; use quack
+;;; set the default scheme binary to racket
+(setq scheme-program-name "racket")
 
-(setq scheme-program-name "racket"
-      scheme-mit-dialect nil)
+(autoload 'scheme-smart-complete "scheme-complete" nil t)
 
-(put 'downcase-region 'disabled nil)
+;; (eval-after-load 'scheme
+;;   '(define-key scheme-mode-map "\t" 'scheme-smart-complete))
+
+(autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
+(add-hook 'scheme-mode-hook
+  (lambda ()
+    (make-local-variable 'eldoc-documentation-function)
+    (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+    (eldoc-mode)))
+
+(require 'geiser)
+(setq geiser-active-implementations '(racket))
+
+;; coffee mode stuff
+(require 'coffee-mode)
+(setq coffee-tab-width 2)
 
 
 (custom-set-faces
