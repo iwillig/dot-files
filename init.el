@@ -1,5 +1,5 @@
 ;; #############################################
-;; Ivan Willig's emacs config file for emacs 23
+;; Ivan Willig's emacs config file for emacs 24
 ;; Includes supports working in
 ;;    Javascript
 ;;    Python
@@ -8,12 +8,6 @@
 ;; Requires package.el, emacs package system
 ;; 
 ;; #############################################
-
-(load-file "~/.emacs.d/package.el")
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -24,33 +18,24 @@
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
 (windmove-default-keybindings)
+(global-rainbow-delimiters-mode)
 (setq inhibit-splash-screen t)
 (add-to-list 'load-path "~/.emacs.d/")
+
 (global-font-lock-mode 1)
 (put 'downcase-region 'disabled nil)
 
-;; set up white space mode and enable it globally
-(require 'whitespace)
-
-(setq whitespace-style (quote
-  ( spaces tabs newline space-mark tab-mark newline-mark)))
-
-;; turn off the tool and menu bar by default
-(progn
-  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
-    (when (fboundp mode) (funcall mode -1))))
-
+(global-linum-mode 1)
 
 ;; ----------------------------------------
 ;; safely install all of the packages
 (defun install-packages ()
   (let ((packages '(magit python-mode clojure-mode
                           starter-kit starter-kit-lisp starter-kit-bindings starter-kit-ruby
-                          flymake-cursor geiser
-                          rainbow-delimiters scheme-complete
-                          nrepl ;; quack
-                          yaml-mode
-                          slime slime-repl paredit js2-mode)))
+                          flymake-cursor geiser rainbow-delimiters scheme-complete scala-mode
+                          zenburn-theme coffee-mode autopair
+                          nrepl yaml-mode paredit js2-mode)))
+
     (dolist (p packages)
       (when (not (package-installed-p p))
         (message "Installing package %s" p)
@@ -58,26 +43,34 @@
 
 (install-packages)
 
+(load-theme 'misterioso)
+
+;;(set-default-font "terminus")
+(set-default-font "Liberation Mono 11")
+(setq tab-width 4)
+
+;; set up white space mode and enable it globally
+(require 'whitespace)
+
+(setq whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark))
+
+;; turn off the tool and menu bar by default
+(progn
+  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
+    (when (fboundp mode) (funcall mode -1))))
+
+
 ;; text editing mode
 ;; add some spelling checkers for the text modes
 (add-hook 'text-mode-hook (lambda () (flyspell-mode)))
 (add-hook 'rst-adjust-hook (lambda () (flyspell-mode)))
 
-
-;; (load-theme 'wheatgrass)
-;; on older version of emacs use the color theme library
-(require 'color-theme)
-(load-file "~/.emacs.d/color-theme-tomorrow.el")
-(color-theme-tomorrow)
-;; (color-theme-tomorrow-night)
-
-;; (set-default-font "Terminus")
-
-;; ----------------------------------------
 ;; ido mode
 (require 'ido)
 (ido-mode t)
 
+(require 'autopair)
+(autopair-global-mode)
 
 ;; ----------------------------------------
 ;; python mode
@@ -85,31 +78,47 @@
 ;; make sure we never use tabs... ever.
 (setq tab-width 4)
 (setq-default indent-tabs-mode nil)
-(add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 
+(add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
+(add-hook 'python-mode-hook (lambda () (hs-minor-mode t)))
+
+;; ----------------------------------------
+;; javascript mode
+
+(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+
+(setq js-indent-level 4)
+
+(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
+(add-hook 'js-mode-hook (lambda () (flyspell-prog-mode)))
+
+
+(defun jslint-info ()
+  (interactive)
+  (insert "/*jslint nomen: true */  \\n"
+          "/*global define: true */"))
+
+
+(add-hook
+ 'js-mode-hook
+ (lambda ()
+   (imenu-add-menubar-index)
+   (hs-minor-mode t)))
+
+;; flymake mode
 (when (load "flymake" t)
 
 
   (defun flymake-jslint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-		       'flymake-create-temp-inplace))
+    	       'flymake-create-temp-inplace))
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
       (list "jslint" (list "--terse" local-file))))
 
-  (setq flymake-err-line-patterns
-	(cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
-		1 2 nil 3)
-	      flymake-err-line-patterns))
 
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.js\\'" flymake-jslint-init))
-
-  (require 'flymake-cursor)
-
-
-  ;; python linting
   (defun flymake-pyflakes-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
                'flymake-create-temp-inplace))
@@ -118,19 +127,18 @@
             (file-name-directory buffer-file-name))))
       (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
 
+  
+  (setq flymake-err-line-patterns
+	(cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
+		1 2 nil 3)
+	      flymake-err-line-patterns))
 
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init)))
+  (add-to-list 'flymake-allowed-file-name-masks '("\\.js\\'" flymake-jslint-init))
+  (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init)))
 
 
+(require 'flymake-cursor)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
-;; ----------------------------------------
-;; javascript mode
-(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-(setq js2-indent-level 4)
-(setq js-indent-level 4)
-(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
 
 ;;  ----------------------------------------
 ;; elisp mode
@@ -146,8 +154,8 @@
     (add-hook 'slime-repl-mode-hook 'paredit-mode-enable)
     (setq slime-protocol-version 'ignore)))
 
-(require 'slime)
-(slime-setup)
+;; (require 'slime)
+;; (slime-setup)
 
 (require 'clojure-mode)
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
@@ -170,12 +178,10 @@
 ;; scheme mode
 ;;; use quack
 ;;; set the default scheme binary to racket
-(setq scheme-program-name "racket")
+ (setq scheme-program-name "racket")
 
 (autoload 'scheme-smart-complete "scheme-complete" nil t)
 
-;; (eval-after-load 'scheme
-;;   '(define-key scheme-mode-map "\t" 'scheme-smart-complete))
 
 (autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
 (add-hook 'scheme-mode-hook
@@ -186,11 +192,3 @@
 
 (require 'geiser)
 (setq geiser-active-implementations '(racket))
-
-;; coffee mode stuff
-(require 'coffee-mode)
-(setq coffee-tab-width 2)
-
-
-(custom-set-faces
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 98 :width normal)))))
