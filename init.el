@@ -12,29 +12,50 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
+;; (add-to-list 'package-archives
+;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+
 (package-initialize)
+
 
 ;; some global settings
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
 (windmove-default-keybindings)
-(global-rainbow-delimiters-mode)
+
 (setq inhibit-splash-screen t)
 (add-to-list 'load-path "~/.emacs.d/")
-
 (global-font-lock-mode 1)
 (put 'downcase-region 'disabled nil)
-
-(global-linum-mode 1)
+(setq-default indent-tabs-mode nil) ;; don't use tabs
+(global-linum-mode 1) ;; i like line numbers
 
 ;; ----------------------------------------
 ;; safely install all of the packages
 (defun install-packages ()
-  (let ((packages '(magit python-mode clojure-mode
-                          starter-kit starter-kit-lisp starter-kit-bindings starter-kit-ruby
-                          flymake-cursor geiser rainbow-delimiters scheme-complete scala-mode
-                          zenburn-theme coffee-mode autopair
-                          nrepl yaml-mode paredit js2-mode)))
+  (let ((packages '(magit
+                    python-mode
+                    clojure-mode
+                    starter-kit
+                    starter-kit-lisp
+                    starter-kit-bindings
+                    starter-kit-ruby
+                    flymake-cursor
+                    geiser
+                    rainbow-delimiters
+                    rainbow-mode
+                    scheme-complete
+                    scala-mode
+                    zenburn-theme
+                    coffee-mode
+                    autopair
+                    cyberpunk-theme
+                    nrepl
+                    scss-mode
+                    yaml-mode
+                    paredit
+                    js2-mode)))
 
     (dolist (p packages)
       (when (not (package-installed-p p))
@@ -43,18 +64,38 @@
 
 (install-packages)
 
-(load-theme 'misterioso)
+(add-to-list 'load-path "~/.emacs.d/")
+;; night theme
+;;(load-theme 'cyberpunk t)
 
-;;(set-default-font "terminus")
-(set-default-font "Liberation Mono 11")
+;; day theme
+ (load-theme 'adwaita)
+
+(require 'rust-mode)
+(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
+
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+;; raindow mode makes emacs display the color of a hex value in the
+;;; background of the test. Its useful for editing css files
+(add-hook 'prog-mode-hook 'rainbow-mode)
+
+(set-default-font "terminus")
+;;(set-default-font "Liberation Mono 10")
 (setq tab-width 4)
 
-;; set up white space mode and enable it globally
+;; set up whitespace mode and enable it globally
 (require 'whitespace)
 
-(setq whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark))
+(setq   whitespace-line-column 80
+        whitespace-style '(face tabs newline space tab-mark newline-mark))
+
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
 
 ;; turn off the tool and menu bar by default
+
 (progn
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
@@ -72,12 +113,19 @@
 (require 'autopair)
 (autopair-global-mode)
 
+;; ---------------------------------------
+;; scss mode
+
+(autoload 'scss-mode "scss-mode")
+(setq scss-compile-at-save nil)
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+
 ;; ----------------------------------------
 ;; python mode
 (require 'python-mode)
 ;; make sure we never use tabs... ever.
 (setq tab-width 4)
-(setq-default indent-tabs-mode nil)
+
 
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 (add-hook 'python-mode-hook (lambda () (hs-minor-mode t)))
@@ -94,12 +142,6 @@
 (add-hook 'js-mode-hook (lambda () (flyspell-prog-mode)))
 
 
-(defun jslint-info ()
-  (interactive)
-  (insert "/*jslint nomen: true */  \\n"
-          "/*global define: true */"))
-
-
 (add-hook
  'js-mode-hook
  (lambda ()
@@ -109,10 +151,9 @@
 ;; flymake mode
 (when (load "flymake" t)
 
-
   (defun flymake-jslint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-    	       'flymake-create-temp-inplace))
+               'flymake-create-temp-inplace))
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
@@ -129,9 +170,9 @@
 
   
   (setq flymake-err-line-patterns
-	(cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
-		1 2 nil 3)
-	      flymake-err-line-patterns))
+        (cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
+                1 2 nil 3)
+              flymake-err-line-patterns))
 
   (add-to-list 'flymake-allowed-file-name-masks '("\\.js\\'" flymake-jslint-init))
   (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init)))
@@ -139,6 +180,13 @@
 
 (require 'flymake-cursor)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
+
+;; ----------------------------------------
+;; tern stuff
+(add-to-list 'load-path "/home/ivan/opt/tern/emacs")
+(autoload 'tern-mode "tern.el" nil t)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+
 
 ;;  ----------------------------------------
 ;; elisp mode
@@ -171,6 +219,15 @@
   (ANY 2)
   (context 2))
 
+;; nrepl stuff
+
+(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
+
+(setq nrepl-hide-special-buffers t)
+(setq nrepl-popup-stacktraces nil)
+(setq nrepl-popup-stacktraces-in-repl t)
+(add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode)
+
 ;; yaml-mode info
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -192,3 +249,46 @@
 
 (require 'geiser)
 (setq geiser-active-implementations '(racket))
+
+
+;; ------------------------------
+(require 'coffee-mode)
+(setq coffee-tab-width 2)
+
+;; ------------------------------
+;; IRC stuff
+
+(require 'erc)
+(require 'erc-join)
+(erc-autojoin-mode 1)
+(erc-spelling-mode 1) ;; I am an awful speller
+(erc-timestamp-mode t)
+(setq erc-timestamp-format "[%R-%m/%d]")
+
+(setq erc-autojoin-channels-alist
+      '(("freenode.net"
+         "#opengeo"
+         "#opengeo-fp"
+         "#geonode"
+         "#socialplanning"
+;;         "#clojure"
+;;         "#emacs"
+         "#openlayers"
+;;         "#modilabs"
+         "#craftyplans"
+;;         "#zco"
+         )))
+
+(setq erc-log-insert-log-on-open nil)
+(setq erc-log-channels t)
+(setq erc-log-channels-directory "~/.irclogs/")
+(setq erc-save-buffer-on-part t)
+(setq erc-hide-timestamps nil)
+
+(setq erc-keywords '("ivan")) ;; 
+
+(defun irc ()
+  (interactive)
+  (erc :server "irc.freenode.net" :port 6667
+       :nick "iwillig" :password "*********"
+       :full-name "Ivan Willig"))
