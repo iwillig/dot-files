@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# gjslint --unix_mode --nobeep --disable 1 --nojsdoc "$1"
+jslint --terse "$1"
+true
