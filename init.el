@@ -31,6 +31,9 @@
 (setq-default indent-tabs-mode nil) ;; don't use tabs
 (global-linum-mode 1) ;; i like line numbers
 
+(global-set-key (kbd "C-x i") 'indent-region)
+
+
 ;; ----------------------------------------
 ;; safely install all of the packages
 (defun install-packages ()
@@ -50,10 +53,10 @@
                     zenburn-theme
                     coffee-mode
                     autopair
-                    cyberpunk-theme
                     nrepl
                     scss-mode
                     yaml-mode
+                    auto-complete
                     paredit
                     js2-mode)))
 
@@ -63,35 +66,44 @@
         (package-install p)))))
 
 (install-packages)
-
 (add-to-list 'load-path "~/.emacs.d/")
+
+(require 'auto-complete-config)
+(ac-config-default)
+(global-auto-complete-mode t)
+
+
+
 ;; night theme
 ;;(load-theme 'cyberpunk t)
 
+(add-to-list 'custom-theme-load-path  "~/.emacs.d/noctilux-theme/")
+(load-theme 'noctilux t)
+
 ;; day theme
- (load-theme 'adwaita)
+;; (load-theme 'adwaita)
 
 (require 'rust-mode)
 (add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
 
 (require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+;;(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; raindow mode makes emacs display the color of a hex value in the
 ;;; background of the test. Its useful for editing css files
-(add-hook 'prog-mode-hook 'rainbow-mode)
+;;(add-hook 'prog-mode-hook 'rainbow-mode)
 
-(set-default-font "terminus")
-;;(set-default-font "Liberation Mono 10")
+;;(set-default-font "terminus")
+(set-default-font "Liberation Mono 10")
 (setq tab-width 4)
 
 ;; set up whitespace mode and enable it globally
 (require 'whitespace)
 
-(setq   whitespace-line-column 80
-        whitespace-style '(face tabs newline space tab-mark newline-mark))
+(setq whitespace-line-column 80
+       whitespace-style '(face tabs newline space tab-mark newline-mark))
 
-(add-hook 'prog-mode-hook 'whitespace-mode)
+;;(add-hook 'prog-mode-hook 'whitespace-mode)
 
 
 ;; turn off the tool and menu bar by default
@@ -148,6 +160,19 @@
    (imenu-add-menubar-index)
    (hs-minor-mode t)))
 
+;; ----------------------------------------
+;; tern stuff
+;; (add-to-list 'load-path "/home/ivan/opt/tern/emacs")
+;; (autoload 'tern-mode "tern.el" nil t)
+
+;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;; (eval-after-load 'tern
+;;    '(progn
+;;       (require 'tern-auto-complete)
+;;       (tern-ac-setup)))
+
+
+
 ;; flymake mode
 (when (load "flymake" t)
 
@@ -157,7 +182,8 @@
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      (list "jslint" (list "--terse" local-file))))
+      ;;      (list "jslint" (list "--terse" local-file))
+      (list "/home/ivan/.emacs.d/jschecker" (list local-file))))
 
 
   (defun flymake-pyflakes-init ()
@@ -180,13 +206,6 @@
 
 (require 'flymake-cursor)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
-
-;; ----------------------------------------
-;; tern stuff
-(add-to-list 'load-path "/home/ivan/opt/tern/emacs")
-(autoload 'tern-mode "tern.el" nil t)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-
 
 ;;  ----------------------------------------
 ;; elisp mode
@@ -219,6 +238,7 @@
   (ANY 2)
   (context 2))
 
+(add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
 ;; nrepl stuff
 
 (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
@@ -268,16 +288,10 @@
 (setq erc-autojoin-channels-alist
       '(("freenode.net"
          "#opengeo"
-         "#opengeo-fp"
          "#geonode"
-         "#socialplanning"
-;;         "#clojure"
-;;         "#emacs"
-         "#openlayers"
-;;         "#modilabs"
+         "#modilabs"
          "#craftyplans"
-;;         "#zco"
-         )))
+         "#clojure")))
 
 (setq erc-log-insert-log-on-open nil)
 (setq erc-log-channels t)
@@ -285,10 +299,10 @@
 (setq erc-save-buffer-on-part t)
 (setq erc-hide-timestamps nil)
 
-(setq erc-keywords '("ivan")) ;; 
+(setq erc-keywords '("ivan" "beer")) ;; 
 
 (defun irc ()
   (interactive)
   (erc :server "irc.freenode.net" :port 6667
-       :nick "iwillig" :password "*********"
+       :nick "iwillig" :password "****"
        :full-name "Ivan Willig"))
