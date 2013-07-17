@@ -45,6 +45,7 @@
                     starter-kit-bindings
                     starter-kit-ruby
                     flymake-cursor
+                    flymake-jshint
                     geiser
                     rainbow-delimiters
                     rainbow-mode
@@ -57,6 +58,7 @@
                     scss-mode
                     yaml-mode
                     auto-complete
+                    markdown-mode
                     paredit
                     js2-mode)))
 
@@ -83,19 +85,20 @@
 ;; day theme
 ;; (load-theme 'adwaita)
 
-(require 'rust-mode)
-(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
+;;(require 'rust-mode)
+;;(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
 
 (require 'rainbow-delimiters)
-;;(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; raindow mode makes emacs display the color of a hex value in the
 ;;; background of the test. Its useful for editing css files
-;;(add-hook 'prog-mode-hook 'rainbow-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
 
 ;;(set-default-font "terminus")
-(set-default-font "Liberation Mono 10")
-(setq tab-width 4)
+;;(set-default-font "Liberation Mono 10")
+;;(setq tab-width 4)
 
 ;; set up whitespace mode and enable it globally
 (require 'whitespace)
@@ -160,6 +163,8 @@
    (imenu-add-menubar-index)
    (hs-minor-mode t)))
 
+(add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
+
 ;; ----------------------------------------
 ;; tern stuff
 ;; (add-to-list 'load-path "/home/ivan/opt/tern/emacs")
@@ -182,8 +187,8 @@
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      ;;      (list "jslint" (list "--terse" local-file))
-      (list "/home/ivan/.emacs.d/jschecker" (list local-file))))
+;;      (list "/usr/local/bin/jslint" (list "--terse" local-file))
+      (list "/Users/ivan.willig/.emacs.d/jschecker" (list local-file))))
 
 
   (defun flymake-pyflakes-init ()
@@ -192,7 +197,7 @@
        (local-file (file-relative-name
             temp-file
             (file-name-directory buffer-file-name))))
-      (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
+      (list "/Users/ivan.willig/.emacs.d/pycheckers"  (list local-file))))
 
   
   (setq flymake-err-line-patterns
@@ -203,6 +208,10 @@
   (add-to-list 'flymake-allowed-file-name-masks '("\\.js\\'" flymake-jslint-init))
   (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init)))
 
+;; allow more then one error on a line
+(setq flymake-number-of-errors-to-display 4)
+;; set the logging level to really high
+;;(setq flymake-log-level 3)
 
 (require 'flymake-cursor)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
