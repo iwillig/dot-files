@@ -33,6 +33,7 @@
 (global-auto-revert-mode t)
 (global-set-key (kbd "C-x i") 'indent-region)
 
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
 ;; ----------------------------------------
 ;; safely install all of the packages
@@ -261,6 +262,7 @@
   (context 2))
 
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+
 ;; nrepl stuff
 
 (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
@@ -321,6 +323,7 @@
 
 (setq erc-autojoin-channels-alist
       '(("freenode.net"
+         "#intentmedia"
          "#opengeo"
          "#geonode"
          "#modilabs"
