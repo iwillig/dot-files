@@ -12,12 +12,10 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
-;; (add-to-list 'package-archives
-;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (package-initialize)
-
 
 ;; some global settings
 (prefer-coding-system 'utf-8)
@@ -61,6 +59,7 @@
                     coffee-mode
                     autopair
                     nrepl
+                    sublime-themes
                     scss-mode
                     yaml-mode
                     auto-complete
@@ -86,7 +85,8 @@
 ;;(load-theme 'cyberpunk t)
 
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/noctilux-theme/")
-(load-theme 'noctilux t)
+(load-theme 'hickey t)
+;;(load-theme 'noctilux t)
 
 ;; day theme
 ;; (load-theme 'adwaita)
