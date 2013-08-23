@@ -30,7 +30,7 @@
 (put 'downcase-region 'disabled nil)
 (setq-default indent-tabs-mode nil) ;; don't use tabs
 (global-linum-mode 1) ;; i like line numbers
-
+(global-auto-revert-mode t)
 (global-set-key (kbd "C-x i") 'indent-region)
 
 
@@ -44,8 +44,13 @@
                     starter-kit-lisp
                     starter-kit-bindings
                     starter-kit-ruby
+                    flymake-easy
+                    flymake-ruby
+                    flymake-coffee
                     flymake-cursor
                     flymake-jshint
+                    flymake-haml
+                    haml-mode
                     geiser
                     rainbow-delimiters
                     rainbow-mode
@@ -106,7 +111,7 @@
 (setq whitespace-line-column 80
        whitespace-style '(face tabs newline space tab-mark newline-mark))
 
-;;(add-hook 'prog-mode-hook 'whitespace-mode)
+(add-hook 'prog-mode-hook 'whitespace-mode)
 
 
 ;; turn off the tool and menu bar by default
@@ -127,6 +132,12 @@
 
 (require 'autopair)
 (autopair-global-mode)
+
+;; ----------------------------------------
+;; Markdown mode hooks
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-hook 'markdown-mode-hook (lambda () (whitespace-mode 1)))
 
 ;; ---------------------------------------
 ;; scss mode
@@ -167,14 +178,16 @@
 
 ;; ----------------------------------------
 ;; tern stuff
-;; (add-to-list 'load-path "/home/ivan/opt/tern/emacs")
-;; (autoload 'tern-mode "tern.el" nil t)
 
-;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-;; (eval-after-load 'tern
-;;    '(progn
-;;       (require 'tern-auto-complete)
-;;       (tern-ac-setup)))
+(add-to-list 'load-path "~/opt/tern/emacs")
+(autoload 'tern-mode "tern.el" nil t)
+
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
 
 
 
@@ -279,10 +292,22 @@
 (require 'geiser)
 (setq geiser-active-implementations '(racket))
 
+;; ------------------------------
+;; ruby
+(require 'flymake-ruby)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+
 
 ;; ------------------------------
+;; coffeescript
 (require 'coffee-mode)
-(setq coffee-tab-width 2)
+(setq coffee-tab-width 4)
+(add-hook 'coffee-mode-hook 'whitespace-mode)
+(add-hook 'coffee-mode-hook 'flyspell-prog-mode)
+
+(require 'flymake-coffee)
+(add-hook 'coffee-mode-hook 'flymake-coffee-load)
+
 
 ;; ------------------------------
 ;; IRC stuff
