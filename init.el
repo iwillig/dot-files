@@ -59,6 +59,7 @@
                     coffee-mode
                     autopair
                     nrepl
+                    cyberpunk-theme
                     sublime-themes
                     scss-mode
                     yaml-mode
@@ -310,6 +311,12 @@
 (require 'flymake-coffee)
 (add-hook 'coffee-mode-hook 'flymake-coffee-load)
 
+;; ------------------------------
+;; typescript
+(require 'typescript)
+(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
+(add-hook 'typescript-mode-hook 'whitespace-mode)
+(add-hook 'typescript-mode-hook  'rainbow-delimiters-mode)
 
 ;; ------------------------------
 ;; IRC stuff
