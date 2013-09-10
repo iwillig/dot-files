@@ -4,7 +4,8 @@
 ;;    Javascript
 ;;    Python
 ;;    Clojure
-;;
+;;    TypeScript
+;;    CoffeScript
 ;; Requires package.el, emacs package system
 ;; 
 ;; #############################################
@@ -59,6 +60,7 @@
                     coffee-mode
                     autopair
                     nrepl
+                    rspec-mode
                     cyberpunk-theme
                     sublime-themes
                     scss-mode
@@ -66,7 +68,9 @@
                     auto-complete
                     markdown-mode
                     paredit
-                    js2-mode)))
+                    js2-mode
+                    fringe-helper
+                    git-gutter-fringe)))
 
     (dolist (p packages)
       (when (not (package-installed-p p))
@@ -87,16 +91,21 @@
 
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/noctilux-theme/")
 (load-theme 'hickey t)
-;;(load-theme 'noctilux t)
-
+;; (load-theme 'mccarthy t)
+;; (load-theme 'noctilux t)
+;; (load-theme 'zenburn t)
 ;; day theme
 ;; (load-theme 'adwaita)
 
 ;;(require 'rust-mode)
 ;;(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
 
-(require 'rainbow-delimiters)
+;; git-gutter-fringe
+(require 'git-gutter-fringe)
+(add-hook 'prog-mode-hook 'git-gutter-mode)
+;;
 
+(require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; raindow mode makes emacs display the color of a hex value in the
@@ -299,14 +308,15 @@
 ;; ruby
 (require 'flymake-ruby)
 (add-hook 'ruby-mode-hook 'flymake-ruby-load)
-
-
+(add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook 'rub-mode-hook 'git-gutter-mode)
 ;; ------------------------------
 ;; coffeescript
 (require 'coffee-mode)
 (setq coffee-tab-width 4)
 (add-hook 'coffee-mode-hook 'whitespace-mode)
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
+(add-hook 'coffee-mode-hook 'git-gutter-mode)
 
 (require 'flymake-coffee)
 (add-hook 'coffee-mode-hook 'flymake-coffee-load)
