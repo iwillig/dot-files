@@ -70,6 +70,7 @@
                     paredit
                     js2-mode
                     fringe-helper
+                    color-theme-sanityinc-tomorrow
                     git-gutter-fringe)))
 
     (dolist (p packages)
@@ -85,25 +86,19 @@
 (global-auto-complete-mode t)
 
 
-
 ;; night theme
 ;;(load-theme 'cyberpunk t)
 
-(add-to-list 'custom-theme-load-path  "~/.emacs.d/noctilux-theme/")
-(load-theme 'hickey t)
-;; (load-theme 'mccarthy t)
-;; (load-theme 'noctilux t)
-;; (load-theme 'zenburn t)
-;; day theme
-;; (load-theme 'adwaita)
+(add-to-list 'custom-theme-load-path  "~/.emacs.d/")
+(load-theme 'sanityinc-tomorrow-night t)
 
-;;(require 'rust-mode)
-;;(add-to-list 'auto-mode-alist '("\\.rs$" . rust-mode))
+;; git gutter mode
+(global-git-gutter-mode t)
 
 ;; git-gutter-fringe
 (require 'git-gutter-fringe)
 (add-hook 'prog-mode-hook 'git-gutter-mode)
-;;
+
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
