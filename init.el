@@ -67,6 +67,9 @@
                     yaml-mode
                     auto-complete
                     markdown-mode
+                    scss-mode
+                    sass-mode
+                    flymake-sass
                     paredit
                     js2-mode
                     fringe-helper
@@ -305,6 +308,7 @@
 (add-hook 'ruby-mode-hook 'flymake-ruby-load)
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
 (add-hook 'rub-mode-hook 'git-gutter-mode)
+(setq ruby-deep-indent-paren nil)
 ;; ------------------------------
 ;; coffeescript
 (require 'coffee-mode)
