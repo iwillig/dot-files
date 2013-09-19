@@ -56,13 +56,11 @@
                     rainbow-mode
                     scheme-complete
                     scala-mode
-                    zenburn-theme
+
                     coffee-mode
                     autopair
                     nrepl
                     rspec-mode
-                    cyberpunk-theme
-                    sublime-themes
                     scss-mode
                     yaml-mode
                     auto-complete
@@ -73,7 +71,22 @@
                     paredit
                     js2-mode
                     fringe-helper
+                    ;; themes
                     color-theme-sanityinc-tomorrow
+                    calmer-forest-theme
+                    soft-charcoal-theme
+                    obsidian-theme
+                    cyberpunk-theme
+                    sublime-themes
+                    ample-theme
+                    zenburn-theme
+                    solarized-theme
+                    toxi-theme
+                    tronesque-theme
+                    moe-theme
+
+
+                    helm
                     git-gutter-fringe)))
 
     (dolist (p packages)
@@ -89,11 +102,19 @@
 (global-auto-complete-mode t)
 
 
+;; helm mode
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+
 ;; night theme
 ;;(load-theme 'cyberpunk t)
 
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/")
+;;(load-theme 'solarized-dark t)
 (load-theme 'sanityinc-tomorrow-night t)
+;;(load-theme 'ample t)
+;;(load-theme 'calmer-forest t)
+;;(load-theme 'obsidian t)
 
 ;; git gutter mode
 (global-git-gutter-mode t)
