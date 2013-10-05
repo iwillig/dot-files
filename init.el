@@ -109,6 +109,10 @@
 ;; night theme
 ;;(load-theme 'cyberpunk t)
 
+(set-default-font "Monospace 10")
+;;(set-default-font "Liberation Mono 10")
+;;(setq tab-width 4)
+
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/")
 ;;(load-theme 'solarized-dark t)
 (load-theme 'sanityinc-tomorrow-night t)
@@ -130,10 +134,6 @@
 ;; raindow mode makes emacs display the color of a hex value in the
 ;;; background of the test. Its useful for editing css files
 (add-hook 'prog-mode-hook 'rainbow-mode)
-
-;;(set-default-font "terminus")
-;;(set-default-font "Liberation Mono 10")
-;;(setq tab-width 4)
 
 ;; set up whitespace mode and enable it globally
 (require 'whitespace)
@@ -231,7 +231,7 @@
                         temp-file
                         (file-name-directory buffer-file-name))))
 ;;      (list "/usr/local/bin/jslint" (list "--terse" local-file))
-      (list "/Users/ivan.willig/.emacs.d/jschecker" (list local-file))))
+      (list "/home/ivan/.emacs.d/jschecker" (list local-file))))
 
 
   (defun flymake-pyflakes-init ()
@@ -240,7 +240,7 @@
        (local-file (file-relative-name
             temp-file
             (file-name-directory buffer-file-name))))
-      (list "/Users/ivan.willig/.emacs.d/pycheckers"  (list local-file))))
+      (list "/ivan/ivan/.emacs.d/pycheckers"  (list local-file))))
 
   
   (setq flymake-err-line-patterns
@@ -288,7 +288,12 @@
   (DELETE 2)
   (HEAD 2)
   (ANY 2)
-  (context 2))
+  (context 2)
+  (describe 'defun)
+  (context 'defun)
+  (it 2)
+  (should 2))
+
 
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
 
