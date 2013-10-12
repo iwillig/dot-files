@@ -39,7 +39,10 @@
 (defun install-packages ()
   (let ((packages '(magit
                     python-mode
+                    ;; clojure stuff
                     clojure-mode
+                    midje-mode
+                    clojure-test-mode
                     starter-kit
                     starter-kit-lisp
                     starter-kit-bindings
@@ -56,6 +59,7 @@
                     rainbow-mode
                     scheme-complete
                     scala-mode
+                    haskell-mode
 
                     coffee-mode
                     autopair
@@ -109,7 +113,8 @@
 ;; night theme
 ;;(load-theme 'cyberpunk t)
 
-(set-default-font "Monospace 10")
+;;(set-default-font "Monospace 10")
+(set-default-font "terminus 12")
 ;;(set-default-font "Liberation Mono 10")
 ;;(setq tab-width 4)
 
@@ -240,7 +245,7 @@
        (local-file (file-relative-name
             temp-file
             (file-name-directory buffer-file-name))))
-      (list "/ivan/ivan/.emacs.d/pycheckers"  (list local-file))))
+      (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
 
   
   (setq flymake-err-line-patterns
@@ -282,6 +287,8 @@
 
 (define-clojure-indent
   (defroutes 'defun)
+  (fact      'defun)
+  (facts     'defun)
   (GET 2)
   (POST 2)
   (PUT 2)
@@ -294,7 +301,11 @@
   (it 2)
   (should 2))
 
-
+;; ####################
+;; configure midje
+(require 'midje-mode)
+(require 'clojure-jump-to-file)
+(add-hook 'clojure-mode-hook 'midje-mode)
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
 
 ;; nrepl stuff
@@ -367,6 +378,7 @@
       '(("freenode.net"
          "#intentmedia"
          "#opengeo"
+         "#socialplanning"
          "#geonode"
          "#modilabs"
          "#craftyplans"
@@ -383,5 +395,5 @@
 (defun irc ()
   (interactive)
   (erc :server "irc.freenode.net" :port 6667
-       :nick "iwillig" :password "****"
+       :nick "iwillig" 
        :full-name "Ivan Willig"))
