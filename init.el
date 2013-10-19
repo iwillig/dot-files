@@ -64,7 +64,7 @@
                     coffee-mode
                     autopair
                     nrepl
-                    rspec-mode
+
                     scss-mode
                     yaml-mode
                     auto-complete
@@ -75,20 +75,21 @@
                     paredit
                     js2-mode
                     fringe-helper
-                    ;; themes
-                    color-theme-sanityinc-tomorrow
-                    calmer-forest-theme
-                    soft-charcoal-theme
-                    obsidian-theme
-                    cyberpunk-theme
+                    golden-ratio
                     sublime-themes
-                    ample-theme
+                    cyberpunk-theme
+                    ;; ;; themes
+                    ;; color-theme-sanityinc-tomorrow
+                    ;; calmer-forest-theme
+                    ;; soft-charcoal-theme
+                    ;; obsidian-theme
+                    ;; ample-theme
                     zenburn-theme
+                    assemblage-theme
                     solarized-theme
-                    toxi-theme
-                    tronesque-theme
-                    moe-theme
-
+                    ;; toxi-theme
+                    ;; tronesque-theme
+                    ;; moe-theme
 
                     helm
                     git-gutter-fringe)))
@@ -104,26 +105,19 @@
 (require 'auto-complete-config)
 (ac-config-default)
 (global-auto-complete-mode t)
+;;
+;; golden resizes the windows to maxiumize
+(require 'golden-ratio)
+(golden-ratio-mode 1)
 
+(require 'ag)
+(setq ag-highlight-search t)
+(setq ag-reuse-window 't)
 
-;; helm mode
-;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-
-;; night theme
-;;(load-theme 'cyberpunk t)
-
-;;(set-default-font "Monospace 10")
-(set-default-font "terminus 12")
-;;(set-default-font "Liberation Mono 10")
-;;(setq tab-width 4)
 
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/")
-;;(load-theme 'solarized-dark t)
-(load-theme 'sanityinc-tomorrow-night t)
-;;(load-theme 'ample t)
-;;(load-theme 'calmer-forest t)
-;;(load-theme 'obsidian t)
+;;(load-theme 'mccarthy t)
+(load-theme 'zenburn t)
 
 ;; git gutter mode
 (global-git-gutter-mode t)
@@ -136,18 +130,37 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-;; raindow mode makes emacs display the color of a hex value in the
+;; raindow mode makes emacs display the color of a hex value in the dasdasdasdad
 ;;; background of the test. Its useful for editing css files
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
 ;; set up whitespace mode and enable it globally
 (require 'whitespace)
 
-(setq whitespace-line-column 80
-       whitespace-style '(face tabs newline space tab-mark newline-mark))
+(setq whitespace-line-column 80)
+
+(setq whitespace-style '(face
+        tabs
+        spaces
+        trailing
+        newline
+        lines-tail
+        ;; newline-mark
+;;        empty
+        space-before-tab
+        space-after-tab))
 
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
+(set-face-attribute 'whitespace-space  nil
+                    :background "#424242"
+                    :foreground "yellow"
+                    :weight 'bold)
+
+(set-face-attribute 'whitespace-line nil
+                    :background "red1"
+                    :foreground "yellow"
+                    :weight 'bold)
 
 ;; turn off the tool and menu bar by default
 
@@ -190,13 +203,14 @@
 
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 (add-hook 'python-mode-hook (lambda () (hs-minor-mode t)))
+(add-hook 'python-mode-hook (lambda () (flymake-mode)))
 
 ;; ----------------------------------------
 ;; javascript mode
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-
+;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq js-indent-level 4)
 
 (add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
@@ -209,6 +223,11 @@
    (imenu-add-menubar-index)
    (hs-minor-mode t)))
 
+(global-set-key (kbd "C-c d") 'hs-show-block)
+(global-set-key (kbd "C-c M-d") 'hs-show-all)
+(global-set-key (kbd "C-c s") 'hs-hide-block)
+(global-set-key (kbd "C-c M-s") 'hs-hide-all)
+
 (add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
 
 ;; ----------------------------------------
@@ -218,6 +237,7 @@
 (autoload 'tern-mode "tern.el" nil t)
 
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js-mode-hook (lambda () (flymake-mode t)))
 
 (eval-after-load 'tern
    '(progn
@@ -235,8 +255,7 @@
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-;;      (list "/usr/local/bin/jslint" (list "--terse" local-file))
-      (list "/home/ivan/.emacs.d/jschecker" (list local-file))))
+      (list "~/.emacs.d/jschecker" (list local-file))))
 
 
   (defun flymake-pyflakes-init ()
@@ -245,9 +264,9 @@
        (local-file (file-relative-name
             temp-file
             (file-name-directory buffer-file-name))))
-      (list "/home/ivan/.emacs.d/pycheckers"  (list local-file))))
+      (list "~/.emacs.d/pycheckers"  (list local-file))))
 
-  
+
   (setq flymake-err-line-patterns
         (cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
                 1 2 nil 3)
@@ -259,7 +278,6 @@
 ;; allow more then one error on a line
 (setq flymake-number-of-errors-to-display 4)
 ;; set the logging level to really high
-;;(setq flymake-log-level 3)
 
 (require 'flymake-cursor)
 (add-hook 'find-file-hook 'flymake-find-file-hook)
@@ -267,7 +285,7 @@
 ;;  ----------------------------------------
 ;; elisp mode
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;; use eldoc 
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;; use eldoc
 
 ;; ----------------------------------------
 ;; slime mode
@@ -342,10 +360,11 @@
 ;; ------------------------------
 ;; ruby
 (require 'flymake-ruby)
-(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+;;(add-hook 'ruby-mode-hook 'flymake-ruby-load)
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
 (add-hook 'rub-mode-hook 'git-gutter-mode)
 (setq ruby-deep-indent-paren nil)
+(setq ruby-indent-level 2)
 ;; ------------------------------
 ;; coffeescript
 (require 'coffee-mode)
@@ -354,8 +373,8 @@
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
 (add-hook 'coffee-mode-hook 'git-gutter-mode)
 
-(require 'flymake-coffee)
-(add-hook 'coffee-mode-hook 'flymake-coffee-load)
+;; (require 'flymake-coffee)
+;; (add-hook 'coffee-mode-hook 'flymake-coffee-load)
 
 ;; ------------------------------
 ;; typescript
@@ -390,10 +409,10 @@
 (setq erc-save-buffer-on-part t)
 (setq erc-hide-timestamps nil)
 
-(setq erc-keywords '("ivan" "beer")) ;; 
+(setq erc-keywords '("ivan" "beer")) ;;
 
 (defun irc ()
   (interactive)
   (erc :server "irc.freenode.net" :port 6667
-       :nick "iwillig" 
+       :nick "iwillig"
        :full-name "Ivan Willig"))
