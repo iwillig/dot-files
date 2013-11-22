@@ -7,7 +7,7 @@
 ;;    TypeScript
 ;;    CoffeScript
 ;; Requires package.el, emacs package system
-;; 
+;;
 ;; #############################################
 (require 'package)
 (add-to-list 'package-archives
@@ -17,6 +17,8 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (package-initialize)
+
+(add-to-list 'custom-theme-load-path  "~/.emacs.d/")
 
 ;; some global settings
 (prefer-coding-system 'utf-8)
@@ -60,11 +62,13 @@
                     scheme-complete
                     scala-mode
                     haskell-mode
-
+                    ;; terminal stuff
+                    multi-term
                     coffee-mode
                     autopair
                     nrepl
 
+                    parscope
                     scss-mode
                     yaml-mode
                     auto-complete
@@ -79,7 +83,7 @@
                     sublime-themes
                     cyberpunk-theme
                     ;; ;; themes
-                    ;; color-theme-sanityinc-tomorrow
+                    color-theme-sanityinc-tomorrow
                     ;; calmer-forest-theme
                     ;; soft-charcoal-theme
                     ;; obsidian-theme
@@ -90,6 +94,7 @@
                     ;; toxi-theme
                     ;; tronesque-theme
                     ;; moe-theme
+                    sunny-day-theme
 
                     helm
                     git-gutter-fringe)))
@@ -102,22 +107,73 @@
 (install-packages)
 (add-to-list 'load-path "~/.emacs.d/")
 
+(load-theme 'sanityinc-tomorrow-bright t)
+
+
+(setq system-uses-terminfo nil)
+;;(setq ansi-term-program "/bin/zsh")
+;;(global-set-key "\C-x\C-a" '(lambda ()(interactive)(ansi-term "/bin/zsh")))
+
+;; terminal config
+;; ------------------------------
+
+(setq multi-term-program "/bin/zsh")
+(add-hook 'term-mode-hook
+          (lambda ()
+            (setq term-buffer-maximum-size 10000)))
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            (setq show-trailing-whitespace nil)
+            (autopair-mode -1)))
+
+(defcustom term-unbind-key-list
+'("C-z" "C-x" "C-c" "C-h" "C-y" "<ESC>")
+"The key list that will need to be unbind."
+:type 'list
+:group 'multi-term)
+
+(defcustom term-bind-key-alist
+  '(
+    ("C-c C-c" . term-interrupt-subjob)
+    ("C-p" . previous-line)
+    ("C-n" . next-line)
+    ("C-s" . isearch-forward)
+    ("C-r" . isearch-backward)
+    ("C-m" . term-send-raw)
+    ("M-f" . term-send-forward-word)
+    ("M-b" . term-send-backward-word)
+    ("M-o" . term-send-backspace)
+    ("M-p" . term-send-up)
+    ("M-n" . term-send-down)
+    ("M-M" . term-send-forward-kill-word)
+    ("M-N" . term-send-backward-kill-word)
+    ("M-r" . term-send-reverse-search-history)
+    ("M-," . term-send-input)
+    ("M-." . comint-dynamic-complete))
+  "The key alist that will need to be bind.
+If you do not like default setup, modify it, with (KEY . COMMAND) format."
+  :type 'alist
+  :group 'multi-term)
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            (define-key term-raw-map (kbd "C-y") 'term-paste)))
+
+;; ------------------------------
+
 (require 'auto-complete-config)
 (ac-config-default)
 (global-auto-complete-mode t)
 ;;
 ;; golden resizes the windows to maxiumize
-(require 'golden-ratio)
-(golden-ratio-mode 1)
+;;(require 'golden-ratio)
+;;(golden-ratio-mode 1)
 
 (require 'ag)
 (setq ag-highlight-search t)
 (setq ag-reuse-window 't)
 
-
-(add-to-list 'custom-theme-load-path  "~/.emacs.d/")
-;;(load-theme 'mccarthy t)
-(load-theme 'zenburn t)
 
 ;; git gutter mode
 (global-git-gutter-mode t)
@@ -135,32 +191,30 @@
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
 ;; set up whitespace mode and enable it globally
-(require 'whitespace)
+;; (require 'whitespace)
 
-(setq whitespace-line-column 80)
+;; (setq whitespace-line-column 120)
 
-(setq whitespace-style '(face
-        tabs
-        spaces
-        trailing
-        newline
-        lines-tail
-        ;; newline-mark
-;;        empty
-        space-before-tab
-        space-after-tab))
+;; (setq whitespace-style '(face
+;;         tabs
+;;         spaces
+;;         trailing
+;;         newline
+;;         lines-tail
+;;         ;; newline-mark
+;; ;;        empty
+;;         space-before-tab
+;;         space-after-tab))
 
-(add-hook 'prog-mode-hook 'whitespace-mode)
+;; (add-hook 'prog-mode-hook 'whitespace-mode)
 
-(set-face-attribute 'whitespace-space  nil
-                    :background "#424242"
-                    :foreground "yellow"
-                    :weight 'bold)
+;; (set-face-attribute 'whitespace-space  nil
+;;                     :background "#0A0A0A"
+;;                     :weight 'bold)
 
-(set-face-attribute 'whitespace-line nil
-                    :background "red1"
-                    :foreground "yellow"
-                    :weight 'bold)
+;; (set-face-attribute 'whitespace-line nil
+;;                     :background "#0A0A0A"
+;;                     :weight 'bold)
 
 ;; turn off the tool and menu bar by default
 
@@ -186,6 +240,7 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook (lambda () (whitespace-mode 1)))
+(setq markdown-command "markdown_py")
 
 ;; ---------------------------------------
 ;; scss mode
@@ -194,11 +249,14 @@
 (setq scss-compile-at-save nil)
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 
+;; haskell mode
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+
 ;; ----------------------------------------
 ;; python mode
 (require 'python-mode)
 ;; make sure we never use tabs... ever.
-(setq tab-width 4)
+(setq tab-width 2)
 
 
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
@@ -208,17 +266,17 @@
 ;; ----------------------------------------
 ;; javascript mode
 
-(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(setq js-indent-level 4)
+;;(setq js2-indent-level 4)
 
-(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
-(add-hook 'js-mode-hook (lambda () (flyspell-prog-mode)))
+(add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
+(add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
 
 
 (add-hook
- 'js-mode-hook
+ 'js2-mode-hook
  (lambda ()
    (imenu-add-menubar-index)
    (hs-minor-mode t)))
@@ -236,8 +294,8 @@
 (add-to-list 'load-path "~/opt/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
 
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(add-hook 'js-mode-hook (lambda () (flymake-mode t)))
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook (lambda () (flymake-mode t)))
 
 (eval-after-load 'tern
    '(progn
@@ -286,7 +344,6 @@
 ;; elisp mode
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;; use eldoc
-
 ;; ----------------------------------------
 ;; slime mode
 (eval-after-load "slime"
@@ -305,6 +362,8 @@
 
 (define-clojure-indent
   (defroutes 'defun)
+  (defroutes 'defun)
+  (for-all   'defun)
   (fact      'defun)
   (facts     'defun)
   (GET 2)
@@ -416,3 +475,4 @@
   (erc :server "irc.freenode.net" :port 6667
        :nick "iwillig"
        :full-name "Ivan Willig"))
+
