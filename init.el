@@ -20,14 +20,18 @@
 
 (add-to-list 'custom-theme-load-path  "~/.emacs.d/")
 
+
+
 ;; some global settings
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
 (windmove-default-keybindings)
+(auto-fill-mode -1)
 
 (setq inhibit-splash-screen t)
 (add-to-list 'load-path "~/.emacs.d/")
 (global-font-lock-mode 1)
+
 (put 'downcase-region 'disabled nil)
 (setq-default indent-tabs-mode nil) ;; don't use tabs
 (global-linum-mode 1) ;; i like line numbers
@@ -45,16 +49,21 @@
                     clojure-mode
                     midje-mode
                     clojure-test-mode
+
                     starter-kit
                     starter-kit-lisp
                     starter-kit-bindings
                     starter-kit-ruby
+
                     flymake-easy
                     flymake-ruby
                     flymake-coffee
                     flymake-cursor
                     flymake-jshint
                     flymake-haml
+
+                    powerline
+
                     haml-mode
                     geiser
                     rainbow-delimiters
@@ -63,11 +72,12 @@
                     scala-mode
                     haskell-mode
                     ;; terminal stuff
+
                     multi-term
                     coffee-mode
                     autopair
+                    cider
                     nrepl
-
                     parscope
                     scss-mode
                     yaml-mode
@@ -76,6 +86,7 @@
                     scss-mode
                     sass-mode
                     flymake-sass
+
                     paredit
                     js2-mode
                     fringe-helper
@@ -84,18 +95,10 @@
                     cyberpunk-theme
                     ;; ;; themes
                     color-theme-sanityinc-tomorrow
-                    ;; calmer-forest-theme
-                    ;; soft-charcoal-theme
-                    ;; obsidian-theme
-                    ;; ample-theme
                     zenburn-theme
                     assemblage-theme
                     solarized-theme
-                    ;; toxi-theme
-                    ;; tronesque-theme
-                    ;; moe-theme
                     sunny-day-theme
-
                     helm
                     git-gutter-fringe)))
 
@@ -107,60 +110,22 @@
 (install-packages)
 (add-to-list 'load-path "~/.emacs.d/")
 
-(load-theme 'sanityinc-tomorrow-bright t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+;;(load-theme 'meta t)
+(load-theme 'zenburn t)
+;;(load-theme 'flatui t)
+
+(require 'highlight-sexp)
 
 
-(setq system-uses-terminfo nil)
-;;(setq ansi-term-program "/bin/zsh")
-;;(global-set-key "\C-x\C-a" '(lambda ()(interactive)(ansi-term "/bin/zsh")))
+(add-hook 'lisp-mode-hook 'highlight-sexp-mode)
+(add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
 
-;; terminal config
-;; ------------------------------
 
-(setq multi-term-program "/bin/zsh")
-(add-hook 'term-mode-hook
-          (lambda ()
-            (setq term-buffer-maximum-size 10000)))
 
-(add-hook 'term-mode-hook
-          (lambda ()
-            (setq show-trailing-whitespace nil)
-            (autopair-mode -1)))
-
-(defcustom term-unbind-key-list
-'("C-z" "C-x" "C-c" "C-h" "C-y" "<ESC>")
-"The key list that will need to be unbind."
-:type 'list
-:group 'multi-term)
-
-(defcustom term-bind-key-alist
-  '(
-    ("C-c C-c" . term-interrupt-subjob)
-    ("C-p" . previous-line)
-    ("C-n" . next-line)
-    ("C-s" . isearch-forward)
-    ("C-r" . isearch-backward)
-    ("C-m" . term-send-raw)
-    ("M-f" . term-send-forward-word)
-    ("M-b" . term-send-backward-word)
-    ("M-o" . term-send-backspace)
-    ("M-p" . term-send-up)
-    ("M-n" . term-send-down)
-    ("M-M" . term-send-forward-kill-word)
-    ("M-N" . term-send-backward-kill-word)
-    ("M-r" . term-send-reverse-search-history)
-    ("M-," . term-send-input)
-    ("M-." . comint-dynamic-complete))
-  "The key alist that will need to be bind.
-If you do not like default setup, modify it, with (KEY . COMMAND) format."
-  :type 'alist
-  :group 'multi-term)
-
-(add-hook 'term-mode-hook
-          (lambda ()
-            (define-key term-raw-map (kbd "C-y") 'term-paste)))
-
-;; ------------------------------
+(require 'powerline)
+(powerline-default-theme)
 
 (require 'auto-complete-config)
 (ac-config-default)
@@ -268,12 +233,15 @@ If you do not like default setup, modify it, with (KEY . COMMAND) format."
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+
+
+
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 ;;(setq js2-indent-level 4)
 
 (add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
 (add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
-
+(add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
 
 (add-hook
  'js2-mode-hook
@@ -302,6 +270,9 @@ If you do not like default setup, modify it, with (KEY . COMMAND) format."
       (require 'tern-auto-complete)
       (tern-ac-setup)))
 
+
+'(add 1 1 1 1)
+;; add(1, 2, 3, 4);
 
 
 ;; flymake mode
@@ -475,4 +446,3 @@ If you do not like default setup, modify it, with (KEY . COMMAND) format."
   (erc :server "irc.freenode.net" :port 6667
        :nick "iwillig"
        :full-name "Ivan Willig"))
-

@@ -1,5 +1,4 @@
 #!/bin/bash
-
-gjslint --unix_mode --nobeep --disable 1 --nojsdoc "$1"
+gjslint --unix_mode --nobeep --disable 1 --max_line_length 200 "$1"
 jslint --terse "$1"
 true
