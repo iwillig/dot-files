@@ -112,16 +112,23 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-;;(load-theme 'meta t)
-(load-theme 'zenburn t)
-;;(load-theme 'flatui t)
+;; (load-theme  'meta t)
+;; (load-theme  'zenburn t)
+;; (load-theme  'flatui t)
+(load-theme 'cyberpunk t)
 
+(x-focus-frame nil)
 (require 'highlight-sexp)
 
 
 (add-hook 'lisp-mode-hook 'highlight-sexp-mode)
 (add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
 
+(defun beautify-json ()
+  (interactive)
+  (let ((b (if mark-active (min (point) (mark)) (point-min)))
+        (e (if mark-active (max (point) (mark)) (point-max))))
+    (shell-command-on-region b e "python -mjson.tool" (current-buffer) t)))
 
 
 (require 'powerline)
