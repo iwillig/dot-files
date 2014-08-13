@@ -93,6 +93,7 @@
                     golden-ratio
                     sublime-themes
                     cyberpunk-theme
+                    base16-theme
                     ;; ;; themes
                     color-theme-sanityinc-tomorrow
                     zenburn-theme
@@ -112,10 +113,13 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
+
+;; (set-default-font "InputMonoNarrow Light")
 ;; (load-theme  'meta t)
 ;; (load-theme  'zenburn t)
 ;; (load-theme  'flatui t)
-(load-theme 'cyberpunk t)
+;; (load-theme 'cyberpunk t)
+(load-theme 'base16-default t)
 
 (x-focus-frame nil)
 (require 'highlight-sexp)
@@ -344,6 +348,8 @@
   (for-all   'defun)
   (fact      'defun)
   (facts     'defun)
+  (future-fact 'defun)
+  (future-facts 'defun)
   (GET 2)
   (POST 2)
   (PUT 2)
