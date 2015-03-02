@@ -1,6 +1,5 @@
-;; #############################################
-;; Ivan Willig's emacs config file for emacs 24
-;; Includes supports working in
+;;; package --- Summary:
+;; Supports
 ;;    Javascript
 ;;    Python
 ;;    Clojure
@@ -10,6 +9,7 @@
 ;;
 ;; #############################################
 (require 'package)
+;;; Code:
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
@@ -17,9 +17,6 @@
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (package-initialize)
-
-(add-to-list 'custom-theme-load-path  "~/.emacs.d/")
-
 
 
 ;; some global settings
@@ -29,7 +26,7 @@
 (auto-fill-mode -1)
 
 (setq inhibit-splash-screen t)
-(add-to-list 'load-path "~/.emacs.d/")
+;; (add-to-list 'load-path "~/.emacs.d/")
 (global-font-lock-mode 1)
 
 (put 'downcase-region 'disabled nil)
@@ -49,7 +46,7 @@
                     clojure-mode
                     midje-mode
                     clojure-test-mode
-
+                    company
                     starter-kit
                     starter-kit-lisp
                     starter-kit-bindings
@@ -73,11 +70,11 @@
                     haskell-mode
                     ;; terminal stuff
 
+                    ag
                     multi-term
                     coffee-mode
                     autopair
                     cider
-                    nrepl
                     parscope
                     scss-mode
                     yaml-mode
@@ -87,6 +84,7 @@
                     sass-mode
                     flymake-sass
 
+                    flycheck
                     paredit
                     js2-mode
                     fringe-helper
@@ -94,6 +92,7 @@
                     sublime-themes
                     cyberpunk-theme
                     base16-theme
+
                     ;; ;; themes
                     color-theme-sanityinc-tomorrow
                     zenburn-theme
@@ -109,22 +108,19 @@
         (package-install p)))))
 
 (install-packages)
-(add-to-list 'load-path "~/.emacs.d/")
-
+;; (add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-
-;; (set-default-font "InputMonoNarrow Light")
-;; (load-theme  'meta t)
-;; (load-theme  'zenburn t)
-;; (load-theme  'flatui t)
-;; (load-theme 'cyberpunk t)
-(load-theme 'base16-default t)
-
+(set-face-attribute 'default nil :height 100)
+(load-theme   'monokai t)
 (x-focus-frame nil)
 (require 'highlight-sexp)
 
 
+(add-hook 'cider-mode-hook #'eldoc-mode)
+(add-hook 'clojure-mode-hook #'eldoc-mode)
+(add-hook 'clojure-mode-hook 'highlight-sexp-mode)
 (add-hook 'lisp-mode-hook 'highlight-sexp-mode)
 (add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
 
@@ -138,10 +134,6 @@
 (require 'powerline)
 (powerline-default-theme)
 
-(require 'auto-complete-config)
-(ac-config-default)
-(global-auto-complete-mode t)
-;;
 ;; golden resizes the windows to maxiumize
 ;;(require 'golden-ratio)
 ;;(golden-ratio-mode 1)
@@ -152,7 +144,7 @@
 
 
 ;; git gutter mode
-(global-git-gutter-mode t)
+;;(global-git-gutter-mode t)
 
 ;; git-gutter-fringe
 (require 'git-gutter-fringe)
@@ -177,8 +169,8 @@
 ;;         trailing
 ;;         newline
 ;;         lines-tail
-;;         ;; newline-mark
-;; ;;        empty
+;; ;;        newline-mark
+;;         empty
 ;;         space-before-tab
 ;;         space-after-tab))
 
@@ -192,8 +184,8 @@
 ;;                     :background "#0A0A0A"
 ;;                     :weight 'bold)
 
-;; turn off the tool and menu bar by default
 
+;; turn off the tool and menu bar by default
 (progn
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
@@ -242,30 +234,30 @@
 ;; ----------------------------------------
 ;; javascript mode
 
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;;(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
 
 
 ;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 ;;(setq js2-indent-level 4)
 
-(add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
-(add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
-(add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
+;; (add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
+;; (add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
+;; (add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
 
-(add-hook
- 'js2-mode-hook
- (lambda ()
-   (imenu-add-menubar-index)
-   (hs-minor-mode t)))
+;; (add-hook
+;;  'js2-mode-hook
+;;  (lambda ()
+;;    (imenu-add-menubar-index)
+;;    (hs-minor-mode t)))
 
-(global-set-key (kbd "C-c d") 'hs-show-block)
-(global-set-key (kbd "C-c M-d") 'hs-show-all)
-(global-set-key (kbd "C-c s") 'hs-hide-block)
-(global-set-key (kbd "C-c M-s") 'hs-hide-all)
+;; (global-set-key (kbd "C-c d") 'hs-show-block)
+;; (global-set-key (kbd "C-c M-d") 'hs-show-all)
+;; (global-set-key (kbd "C-c s") 'hs-hide-block)
+;; (global-set-key (kbd "C-c M-s") 'hs-hide-all)
 
-(add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
+;; (add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
 
 ;; ----------------------------------------
 ;; tern stuff
@@ -273,74 +265,35 @@
 (add-to-list 'load-path "~/opt/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
 
-(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
-(add-hook 'js2-mode-hook (lambda () (flymake-mode t)))
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+(require 'flycheck)
 
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
 
-'(add 1 1 1 1)
-;; add(1, 2, 3, 4);
-
-
-;; flymake mode
-(when (load "flymake" t)
-
-  (defun flymake-jslint-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-               'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "~/.emacs.d/jschecker" (list local-file))))
-
-
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-               'flymake-create-temp-inplace))
-       (local-file (file-relative-name
-            temp-file
-            (file-name-directory buffer-file-name))))
-      (list "~/.emacs.d/pycheckers"  (list local-file))))
-
-
-  (setq flymake-err-line-patterns
-        (cons '("^\\(.*\\)(\\([[:digit:]]+\\)):\\(.*\\)$"
-                1 2 nil 3)
-              flymake-err-line-patterns))
-
-  (add-to-list 'flymake-allowed-file-name-masks '("\\.js\\'" flymake-jslint-init))
-  (add-to-list 'flymake-allowed-file-name-masks '("\\.py\\'" flymake-pyflakes-init)))
-
-;; allow more then one error on a line
-(setq flymake-number-of-errors-to-display 4)
-;; set the logging level to really high
-
-(require 'flymake-cursor)
-(add-hook 'find-file-hook 'flymake-find-file-hook)
+(add-hook 'js-mode-hook (lambda () (whitespace-mode t)))
 
 ;;  ----------------------------------------
 ;; elisp mode
 (add-hook 'emacs-lisp-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;; use eldoc
 ;; ----------------------------------------
-;; slime mode
-(eval-after-load "slime"
-  '(progn (slime-setup '(slime-repl))
-          (defun paredit-mode-enable () (paredit-mode 1))
-    (add-hook 'slime-mode-hook 'paredit-mode-enable)
-    (add-hook 'slime-repl-mode-hook 'paredit-mode-enable)
-    (setq slime-protocol-version 'ignore)))
 
-;; (require 'slime)
-;; (slime-setup)
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
 
 (require 'clojure-mode)
+;; cider stuff
+(add-hook 'cider-repl-mode-hook #'company-mode)
+(add-hook 'cider-mode-hook #'company-mode)
+(add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+
+
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
+
 
 (define-clojure-indent
   (defroutes 'defun)
@@ -372,15 +325,6 @@
 (add-hook 'clojure-mode-hook 'midje-mode)
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
 
-;; nrepl stuff
-
-(add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
-
-(setq nrepl-hide-special-buffers t)
-(setq nrepl-popup-stacktraces nil)
-(setq nrepl-popup-stacktraces-in-repl t)
-(add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode)
-
 ;; yaml-mode info
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -388,7 +332,7 @@
 ;; scheme mode
 ;;; use quack
 ;;; set the default scheme binary to racket
- (setq scheme-program-name "racket")
+(setq scheme-program-name "racket")
 
 (autoload 'scheme-smart-complete "scheme-complete" nil t)
 
@@ -406,7 +350,6 @@
 ;; ------------------------------
 ;; ruby
 (require 'flymake-ruby)
-;;(add-hook 'ruby-mode-hook 'flymake-ruby-load)
 (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
 (add-hook 'rub-mode-hook 'git-gutter-mode)
 (setq ruby-deep-indent-paren nil)
@@ -418,16 +361,6 @@
 (add-hook 'coffee-mode-hook 'whitespace-mode)
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
 (add-hook 'coffee-mode-hook 'git-gutter-mode)
-
-;; (require 'flymake-coffee)
-;; (add-hook 'coffee-mode-hook 'flymake-coffee-load)
-
-;; ------------------------------
-;; typescript
-(require 'typescript)
-(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
-(add-hook 'typescript-mode-hook 'whitespace-mode)
-(add-hook 'typescript-mode-hook  'rainbow-delimiters-mode)
 
 ;; ------------------------------
 ;; IRC stuff
