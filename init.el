@@ -10,11 +10,12 @@
 ;; #############################################
 (require 'package)
 ;;; Code:
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 (package-initialize)
 
@@ -34,6 +35,8 @@
 (global-linum-mode 1) ;; i like line numbers
 (global-auto-revert-mode t)
 (global-set-key (kbd "C-x i") 'indent-region)
+(global-set-key (kbd "C-c g") 'magit-status)
+
 
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
@@ -42,66 +45,34 @@
 (defun install-packages ()
   (let ((packages '(magit
                     python-mode
-                    ;; clojure stuff
+                    ;; clojure start
                     clojure-mode
                     midje-mode
-                    clojure-test-mode
+                    clj-refactor
+                    ;; clojure end
                     company
-                    starter-kit
-                    starter-kit-lisp
-                    starter-kit-bindings
-                    starter-kit-ruby
-
-                    flymake-easy
-                    flymake-ruby
-                    flymake-coffee
-                    flymake-cursor
-                    flymake-jshint
-                    flymake-haml
-
-                    powerline
-
-                    haml-mode
-                    geiser
                     rainbow-delimiters
                     rainbow-mode
-                    scheme-complete
-                    scala-mode
-                    haskell-mode
-                    ;; terminal stuff
-
                     ag
-                    multi-term
-                    coffee-mode
                     autopair
-                    cider
-                    parscope
                     scss-mode
                     yaml-mode
-                    auto-complete
                     markdown-mode
                     scss-mode
                     sass-mode
-                    flymake-sass
-
                     flycheck
                     paredit
                     js2-mode
                     fringe-helper
-                    golden-ratio
-                    sublime-themes
                     cyberpunk-theme
-                    base16-theme
-
-                    ;; ;; themes
-                    color-theme-sanityinc-tomorrow
-                    zenburn-theme
-                    assemblage-theme
-                    solarized-theme
-                    sunny-day-theme
-                    helm
+                    subatomic-theme
+                    powerline
+                    git-timemachine
+                    smeargle
+                    gist    
+                    align-cljlet
                     git-gutter-fringe)))
-
+    
     (dolist (p packages)
       (when (not (package-installed-p p))
         (message "Installing package %s" p)
@@ -112,11 +83,13 @@
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-(set-face-attribute 'default nil :height 100)
-(load-theme   'monokai t)
+;; (set-face-attribute 'default nil :height 100)
+;;(load-theme   'monokai t)
+;;(load-theme 'cyberpunk t)
+;;;(load-theme 'solarized-dark t)
+(load-theme 'subatomic t)
 (x-focus-frame nil)
 (require 'highlight-sexp)
-
 
 (add-hook 'cider-mode-hook #'eldoc-mode)
 (add-hook 'clojure-mode-hook #'eldoc-mode)
@@ -124,31 +97,24 @@
 (add-hook 'lisp-mode-hook 'highlight-sexp-mode)
 (add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
 
-(defun beautify-json ()
+(defun pp-json ()
   (interactive)
   (let ((b (if mark-active (min (point) (mark)) (point-min)))
         (e (if mark-active (max (point) (mark)) (point-max))))
     (shell-command-on-region b e "python -mjson.tool" (current-buffer) t)))
 
 
-(require 'powerline)
-(powerline-default-theme)
-
-;; golden resizes the windows to maxiumize
-;;(require 'golden-ratio)
-;;(golden-ratio-mode 1)
-
 (require 'ag)
 (setq ag-highlight-search t)
 (setq ag-reuse-window 't)
 
+(setq ispell-program-name "aspell")
 
 ;; git gutter mode
-;;(global-git-gutter-mode t)
+(global-git-gutter-mode t)
 
-;; git-gutter-fringe
-(require 'git-gutter-fringe)
-(add-hook 'prog-mode-hook 'git-gutter-mode)
+(require 'powerline)
+(powerline-default-theme)
 
 
 (require 'rainbow-delimiters)
@@ -157,33 +123,6 @@
 ;; raindow mode makes emacs display the color of a hex value in the dasdasdasdad
 ;;; background of the test. Its useful for editing css files
 (add-hook 'prog-mode-hook 'rainbow-mode)
-
-;; set up whitespace mode and enable it globally
-;; (require 'whitespace)
-
-;; (setq whitespace-line-column 120)
-
-;; (setq whitespace-style '(face
-;;         tabs
-;;         spaces
-;;         trailing
-;;         newline
-;;         lines-tail
-;; ;;        newline-mark
-;;         empty
-;;         space-before-tab
-;;         space-after-tab))
-
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
-
-;; (set-face-attribute 'whitespace-space  nil
-;;                     :background "#0A0A0A"
-;;                     :weight 'bold)
-
-;; (set-face-attribute 'whitespace-line nil
-;;                     :background "#0A0A0A"
-;;                     :weight 'bold)
-
 
 ;; turn off the tool and menu bar by default
 (progn
@@ -234,30 +173,19 @@
 ;; ----------------------------------------
 ;; javascript mode
 
-;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-;;(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 
 
 
-;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;;(setq js2-indent-level 4)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq js2-indent-level 4)
 
-;; (add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
-;; (add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
-;; (add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
+(add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
+(add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
+(add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
 
-;; (add-hook
-;;  'js2-mode-hook
-;;  (lambda ()
-;;    (imenu-add-menubar-index)
-;;    (hs-minor-mode t)))
-
-;; (global-set-key (kbd "C-c d") 'hs-show-block)
-;; (global-set-key (kbd "C-c M-d") 'hs-show-all)
-;; (global-set-key (kbd "C-c s") 'hs-hide-block)
-;; (global-set-key (kbd "C-c M-s") 'hs-hide-all)
-
-;; (add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
+(add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
 
 ;; ----------------------------------------
 ;; tern stuff
@@ -281,28 +209,35 @@
 ;; ----------------------------------------
 
 (require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-
+;;(add-hook 'after-init-hook 'global-company-mode)
+(global-company-mode)
+(require 'cider)
 (require 'clojure-mode)
 ;; cider stuff
-(add-hook 'cider-repl-mode-hook #'company-mode)
-(add-hook 'cider-mode-hook #'company-mode)
+;;(add-hook 'cider-repl-mode-hook #'company-mode)
+;;(add-hook 'cider-mode-hook #'company-mode)
 (add-hook 'cider-repl-mode-hook #'paredit-mode)
 (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
-
 
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
 
+(require 'clj-refactor)
+(setq cider-repl-history-file "~/.cider_history")
 
 (define-clojure-indent
   (defroutes 'defun)
   (defroutes 'defun)
+  (async     'defun)
   (for-all   'defun)
   (fact      'defun)
   (facts     'defun)
   (future-fact 'defun)
   (future-facts 'defun)
+  (endpoint 'defun)
+  (on-status 'defun)
+  (method 'defun)
+  (on-request 'defun)
   (GET 2)
   (POST 2)
   (PUT 2)
@@ -321,46 +256,25 @@
 ;; ####################
 ;; configure midje
 (require 'midje-mode)
-(require 'clojure-jump-to-file)
+;;(require 'clojure-jump-to-file)
 (add-hook 'clojure-mode-hook 'midje-mode)
 (add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 
 ;; yaml-mode info
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
-;; scheme mode
-;;; use quack
-;;; set the default scheme binary to racket
-(setq scheme-program-name "racket")
 
-(autoload 'scheme-smart-complete "scheme-complete" nil t)
-
-
-(autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
-(add-hook 'scheme-mode-hook
-  (lambda ()
-    (make-local-variable 'eldoc-documentation-function)
-    (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
-    (eldoc-mode)))
-
-(require 'geiser)
-(setq geiser-active-implementations '(racket))
-
-;; ------------------------------
 ;; ruby
-(require 'flymake-ruby)
-(add-hook 'ruby-mode-hook 'flyspell-prog-mode)
-(add-hook 'rub-mode-hook 'git-gutter-mode)
+;;(add-hook 'rub-mode-hook 'git-gutter-mode)
 (setq ruby-deep-indent-paren nil)
 (setq ruby-indent-level 2)
 ;; ------------------------------
 ;; coffeescript
-(require 'coffee-mode)
-(setq coffee-tab-width 4)
 (add-hook 'coffee-mode-hook 'whitespace-mode)
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
-(add-hook 'coffee-mode-hook 'git-gutter-mode)
+;;(add-hook 'coffee-mode-hook 'git-gutter-mode)
 
 ;; ------------------------------
 ;; IRC stuff
