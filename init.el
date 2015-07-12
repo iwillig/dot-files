@@ -34,8 +34,6 @@
 (setq-default indent-tabs-mode nil) ;; don't use tabs
 (global-linum-mode 1) ;; i like line numbers
 (global-auto-revert-mode t)
-(global-set-key (kbd "C-x i") 'indent-region)
-(global-set-key (kbd "C-c g") 'magit-status)
 
 
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
@@ -48,6 +46,7 @@
                     ;; clojure start
                     clojure-mode
                     midje-mode
+                    cider
                     clj-refactor
                     ;; clojure end
                     company
@@ -102,6 +101,10 @@
   (let ((b (if mark-active (min (point) (mark)) (point-min)))
         (e (if mark-active (max (point) (mark)) (point-max))))
     (shell-command-on-region b e "python -mjson.tool" (current-buffer) t)))
+
+;;; Key commands
+(global-set-key (kbd "C-x i") 'indent-region)
+(global-set-key (kbd "C-c g") 'magit-status)
 
 
 (require 'ag)
