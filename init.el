@@ -68,14 +68,19 @@
                     powerline
                     git-timemachine
                     smeargle
-                    gist    
+                    gist
                     align-cljlet
                     git-gutter-fringe)))
-    
+
     (dolist (p packages)
       (when (not (package-installed-p p))
         (message "Installing package %s" p)
         (package-install p)))))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq whitespace-line-column 250)
+(setq show-trailing-whitespace t)
 
 (install-packages)
 ;; (add-to-list 'load-path "~/.emacs.d/")
@@ -86,15 +91,21 @@
 ;;(load-theme   'monokai t)
 ;;(load-theme 'cyberpunk t)
 ;;;(load-theme 'solarized-dark t)
-(load-theme 'subatomic t)
+;;(load-theme 'subatomic t)
 (x-focus-frame nil)
+
+
 (require 'highlight-sexp)
 
 (add-hook 'cider-mode-hook #'eldoc-mode)
 (add-hook 'clojure-mode-hook #'eldoc-mode)
+(add-hook 'clojure-mode-hook #'whitespace-mode)
+
 (add-hook 'clojure-mode-hook 'highlight-sexp-mode)
-(add-hook 'lisp-mode-hook 'highlight-sexp-mode)
-(add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
+(setq hl-sexp-background-color "#eee")
+
+;;(add-hook 'lisp-mode-hook 'highlight-sexp-mode)
+;;(add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
 
 (defun pp-json ()
   (interactive)
@@ -105,7 +116,7 @@
 ;;; Key commands
 (global-set-key (kbd "C-x i") 'indent-region)
 (global-set-key (kbd "C-c g") 'magit-status)
-
+(global-set-key (kbd "C-x q") 'fill-paragraph)
 
 (require 'ag)
 (setq ag-highlight-search t)
@@ -175,35 +186,35 @@
 
 ;; ----------------------------------------
 ;; javascript mode
+(setq js-indent-level 2)
 
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+
+;;(setq js2-indent-level 2)
+
+(setq js2-basic-offset 2)
 
 
+(add-to-list 'load-path "~/tern/emacs")
+(autoload 'tern-mode "tern.el" nil t)
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(setq js2-indent-level 4)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
 
-(add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
-(add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
-(add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
+(add-hook 'js-mode-hook (lambda () (whitespace-mode t)))
+(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
+(add-hook 'js-mode-hook (lambda () (flyspell-prog-mode)))
+(add-hook 'js-mode-hook (lambda () (turn-off-auto-fill)))
 
 (add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
 
 ;; ----------------------------------------
 ;; tern stuff
 
-(add-to-list 'load-path "~/opt/tern/emacs")
-(autoload 'tern-mode "tern.el" nil t)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 (require 'flycheck)
-
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
-
-(add-hook 'js-mode-hook (lambda () (whitespace-mode t)))
 
 ;;  ----------------------------------------
 ;; elisp mode
@@ -312,3 +323,7 @@
   (erc :server "irc.freenode.net" :port 6667
        :nick "iwillig"
        :full-name "Ivan Willig"))
+
+
+(custom-set-faces
+ '(whitespace-space ((t (:background "alternateSelectedControlTextColor" :foreground "lightgray")))))
