@@ -11,11 +11,8 @@
 (require 'package)
 ;;; Code:
 
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/") t)
-
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 
@@ -27,14 +24,13 @@
 (auto-fill-mode -1)
 
 (setq inhibit-splash-screen t)
-;; (add-to-list 'load-path "~/.emacs.d/")
 (global-font-lock-mode 1)
 
 (put 'downcase-region 'disabled nil)
 (setq-default indent-tabs-mode nil) ;; don't use tabs
 (global-linum-mode 1) ;; i like line numbers
 (global-auto-revert-mode t)
-
+(global-hl-line-mode 1)
 
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
@@ -48,6 +44,8 @@
                     midje-mode
                     cider
                     clj-refactor
+                    flycheck-clojure
+                    flycheck-pos-tip
                     ;; clojure end
                     company
                     rainbow-delimiters
@@ -66,11 +64,21 @@
                     cyberpunk-theme
                     subatomic-theme
                     powerline
+                    spaceline
+                    eyebrowse
+                    anzu
                     git-timemachine
                     smeargle
                     gist
                     align-cljlet
-                    git-gutter-fringe)))
+                    git-gutter-fringe
+                    flatland-theme
+                    mustache-mode
+                    browse-at-remote
+                    spacemacs-theme
+                    ample-theme
+                    paradox
+                    solarized-theme)))
 
     (dolist (p packages)
       (when (not (package-installed-p p))
@@ -87,22 +95,28 @@
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-;; (set-face-attribute 'default nil :height 100)
-;;(load-theme   'monokai t)
-;;(load-theme 'cyberpunk t)
-;;;(load-theme 'solarized-dark t)
-;;(load-theme 'subatomic t)
-(x-focus-frame nil)
+(load-theme 'ample t)
 
+(set-face-attribute 'default nil
+                    :family "Source Code Pro"
+                    :height 120
+                    :weight 'normal
+                    :width 'normal)
+
+;;(load-theme 'spacemacs-dark t)
+
+(x-focus-frame nil)
 
 (require 'highlight-sexp)
 
 (add-hook 'cider-mode-hook #'eldoc-mode)
 (add-hook 'clojure-mode-hook #'eldoc-mode)
-(add-hook 'clojure-mode-hook #'whitespace-mode)
+;;(add-hook 'clojure-mode-hook #'whitespace-mode)
+(setq cljr-suppress-middleware-warnings t)
 
 (add-hook 'clojure-mode-hook 'highlight-sexp-mode)
-(setq hl-sexp-background-color "#eee")
+(setq hl-sexp-background-color "#2D3235")
+;;(setq hl-sexp-background-color "#eee")
 
 ;;(add-hook 'lisp-mode-hook 'highlight-sexp-mode)
 ;;(add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
@@ -128,8 +142,14 @@
 (global-git-gutter-mode t)
 
 (require 'powerline)
-(powerline-default-theme)
+;;(powerline-default-theme)
+(require 'spaceline-config)
+(spaceline-emacs-theme)
+(setq ns-use-srgb-colorspace nil)
 
+(eyebrowse-mode t)
+
+(global-set-key (kbd "C-c M-g") 'browse-at-remote)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -186,25 +206,24 @@
 
 ;; ----------------------------------------
 ;; javascript mode
-(setq js-indent-level 2)
 
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 ;;(setq js2-indent-level 2)
 
 (setq js2-basic-offset 2)
-
+(setq js2-mode-show-strict-warnings nil)
 
 (add-to-list 'load-path "~/tern/emacs")
 (autoload 'tern-mode "tern.el" nil t)
 
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
 
-(add-hook 'js-mode-hook (lambda () (whitespace-mode t)))
-(add-hook 'js-mode-hook (lambda () (paredit-mode -1)))
-(add-hook 'js-mode-hook (lambda () (flyspell-prog-mode)))
-(add-hook 'js-mode-hook (lambda () (turn-off-auto-fill)))
+(add-hook 'js2-mode-hook (lambda () (whitespace-mode f)))
+(add-hook 'js2-mode-hook (lambda () (paredit-mode -1)))
+(add-hook 'js2-mode-hook (lambda () (flyspell-prog-mode)))
+(add-hook 'js2-mode-hook (lambda () (turn-off-auto-fill)))
 
 (add-hook 'css-mode-hook (lambda () (rainbow-mode 1)))
 
@@ -236,7 +255,9 @@
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (flyspell-prog-mode)))
 
+
 (require 'clj-refactor)
+
 (setq cider-repl-history-file "~/.cider_history")
 
 (define-clojure-indent
@@ -279,7 +300,6 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
-
 ;; ruby
 ;;(add-hook 'rub-mode-hook 'git-gutter-mode)
 (setq ruby-deep-indent-paren nil)
@@ -289,41 +309,3 @@
 (add-hook 'coffee-mode-hook 'whitespace-mode)
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
 ;;(add-hook 'coffee-mode-hook 'git-gutter-mode)
-
-;; ------------------------------
-;; IRC stuff
-
-(require 'erc)
-(require 'erc-join)
-(erc-autojoin-mode 1)
-(erc-spelling-mode 1) ;; I am an awful speller
-(erc-timestamp-mode t)
-(setq erc-timestamp-format "[%R-%m/%d]")
-
-(setq erc-autojoin-channels-alist
-      '(("freenode.net"
-         "#intentmedia"
-         "#opengeo"
-         "#socialplanning"
-         "#geonode"
-         "#modilabs"
-         "#craftyplans"
-         "#clojure")))
-
-(setq erc-log-insert-log-on-open nil)
-(setq erc-log-channels t)
-(setq erc-log-channels-directory "~/.irclogs/")
-(setq erc-save-buffer-on-part t)
-(setq erc-hide-timestamps nil)
-
-(setq erc-keywords '("ivan" "beer")) ;;
-
-(defun irc ()
-  (interactive)
-  (erc :server "irc.freenode.net" :port 6667
-       :nick "iwillig"
-       :full-name "Ivan Willig"))
-
-
-(custom-set-faces
- '(whitespace-space ((t (:background "alternateSelectedControlTextColor" :foreground "lightgray")))))
