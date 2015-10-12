@@ -1,4 +1,5 @@
 ;;; package --- Summary:
+;;; Commentary:
 ;; Supports
 ;;    Javascript
 ;;    Python
@@ -15,7 +16,6 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
-
 
 ;; some global settings
 (prefer-coding-system 'utf-8)
@@ -118,9 +118,6 @@
 (setq hl-sexp-background-color "#2D3235")
 ;;(setq hl-sexp-background-color "#eee")
 
-;;(add-hook 'lisp-mode-hook 'highlight-sexp-mode)
-;;(add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
-
 (defun pp-json ()
   (interactive)
   (let ((b (if mark-active (min (point) (mark)) (point-min)))
@@ -199,13 +196,12 @@
 ;; make sure we never use tabs... ever.
 (setq tab-width 2)
 
-
 (add-hook 'python-mode-hook (lambda () (flyspell-prog-mode)))
 (add-hook 'python-mode-hook (lambda () (hs-minor-mode t)))
 (add-hook 'python-mode-hook (lambda () (flymake-mode)))
 
 ;; ----------------------------------------
-;; javascript mode
+;; Javascript mode
 
 (add-to-list 'auto-mode-alist '("\\.json$" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
