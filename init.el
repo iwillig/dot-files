@@ -77,6 +77,9 @@
                     browse-at-remote
                     spacemacs-theme
                     ample-theme
+                    seti-theme
+                    basic-theme
+                    noctilux-theme
                     paradox
                     solarized-theme)))
 
@@ -85,16 +88,14 @@
         (message "Installing package %s" p)
         (package-install p)))))
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(install-packages)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq whitespace-line-column 250)
 (setq show-trailing-whitespace t)
 
-(install-packages)
-;; (add-to-list 'load-path "~/.emacs.d/")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
 (load-theme 'ample t)
 
 (set-face-attribute 'default nil
@@ -103,20 +104,16 @@
                     :weight 'normal
                     :width 'normal)
 
-;;(load-theme 'spacemacs-dark t)
-
 (x-focus-frame nil)
 
 (require 'highlight-sexp)
+(add-hook 'clojure-mode-hook 'highlight-sexp-mode)
+(setq hl-sexp-background-color "#2D3235")
+
 
 (add-hook 'cider-mode-hook #'eldoc-mode)
 (add-hook 'clojure-mode-hook #'eldoc-mode)
-;;(add-hook 'clojure-mode-hook #'whitespace-mode)
 (setq cljr-suppress-middleware-warnings t)
-
-(add-hook 'clojure-mode-hook 'highlight-sexp-mode)
-(setq hl-sexp-background-color "#2D3235")
-;;(setq hl-sexp-background-color "#eee")
 
 (defun pp-json ()
   (interactive)
@@ -139,7 +136,6 @@
 (global-git-gutter-mode t)
 
 (require 'powerline)
-;;(powerline-default-theme)
 (require 'spaceline-config)
 (spaceline-emacs-theme)
 (setq ns-use-srgb-colorspace nil)
@@ -151,7 +147,7 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-;; raindow mode makes emacs display the color of a hex value in the dasdasdasdad
+;; raindow mode makes emacs display the color of a hex value in the
 ;;; background of the test. Its useful for editing css files
 (add-hook 'prog-mode-hook 'rainbow-mode)
 
@@ -159,7 +155,6 @@
 (progn
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
-
 
 ;; text editing mode
 ;; add some spelling checkers for the text modes
@@ -263,6 +258,9 @@
   (for-all   'defun)
   (fact      'defun)
   (facts     'defun)
+  (render    'defun)
+  (query     'defun)
+  (params    'defun)
   (future-fact 'defun)
   (future-facts 'defun)
   (endpoint 'defun)
@@ -304,4 +302,3 @@
 ;; coffeescript
 (add-hook 'coffee-mode-hook 'whitespace-mode)
 (add-hook 'coffee-mode-hook 'flyspell-prog-mode)
-;;(add-hook 'coffee-mode-hook 'git-gutter-mode)
