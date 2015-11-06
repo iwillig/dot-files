@@ -79,6 +79,7 @@
                     ample-theme
                     seti-theme
                     basic-theme
+                    restclient
                     noctilux-theme
                     paradox
                     solarized-theme)))
@@ -96,7 +97,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'ample t)
+(load-theme 'spacemacs-dark t)
 
 (set-face-attribute 'default nil
                     :family "Source Code Pro"
