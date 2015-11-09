@@ -39,6 +39,9 @@
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
+;; desktop mode saves the buffer locations
+(desktop-save-mode 1)
+
 
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
@@ -85,7 +88,6 @@
 
 (defun clojure-hook ()
   (require 'clojure-mode)
-  (enable-paredit-mode)
   (define-clojure-indent
     (defroutes 'defun)
     (defroutes 'defun)
@@ -116,7 +118,8 @@
   :init (clojure-hook))
 
 (add-hook 'clojure-mode-hook 'clojure-hook)
-(add-hook 'clojure-mode-hook 'el-doc-mode)
+(add-hook 'clojure-mode-hook 'eldoc-mode)
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
 
 (use-package cider
   :ensure t
