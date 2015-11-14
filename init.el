@@ -2,13 +2,23 @@
 ;;; Commentary:
 ;; Supports
 ;;    Clojure
+;;    JavaScript
 ;; #############################################
 
+;; ----- Package setup -----
 (require 'package)
-
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
+
+;; ----- Default Front -----
+(set-face-attribute 'default nil
+                    :family "Source Code Pro"
+                    :height 120
+                    :weight 'normal
+                    :width 'normal)
+
+;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
 (windmove-default-keybindings)
@@ -23,12 +33,6 @@
 (global-auto-revert-mode t)
 (global-hl-line-mode 1)
 
-(set-face-attribute 'default nil
-                    :family "Source Code Pro"
-                    :height 120
-                    :weight 'normal
-                    :width 'normal)
-
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq whitespace-line-column 250)
 (setq show-trailing-whitespace t)
@@ -39,12 +43,11 @@
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
-;; desktop mode saves the buffer locations
 (desktop-save-mode 1)
-
 
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
+;; ----- Third Party Packages -----
 (require 'use-package)
 
 (use-package  magit
@@ -115,11 +118,11 @@
 
 (use-package clojure-mode
   :ensure t
-  :init (clojure-hook))
-
-(add-hook 'clojure-mode-hook 'clojure-hook)
-(add-hook 'clojure-mode-hook 'eldoc-mode)
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+  :init
+  (clojure-hook)
+  (add-hook 'clojure-mode-hook 'clojure-hook)
+  (add-hook 'clojure-mode-hook 'eldoc-mode)
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
 (use-package cider
   :ensure t
@@ -147,3 +150,26 @@
 (use-package ido
   :ensure t
   :init (ido-mode t))
+
+(use-package restclient
+  :ensure t)
+
+(use-package emojify
+  :ensure t
+  :init (add-hook 'after-init-hook #'global-emojify-mode))
+
+(use-package js2-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+  (setq js2-basic-offset 2)
+  (setq js2-bounce-indent-p t))
+
+(add-to-list 'load-path "~/opt/tern/emacs")
+(use-package tern
+  :init (add-hook 'js2-mode-hook (lambda () (tern-mode 1))))
+
+(use-package company-tern
+  :ensure t
+  :init (add-to-list 'company-backends 'company-tern))
