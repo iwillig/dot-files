@@ -89,6 +89,13 @@
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
+(use-package yasnippet
+  :ensure t)
+
+(use-package clj-refactor
+  :ensure t
+  :init (cljr-add-keybindings-with-prefix "C-c C-m"))
+
 (defun clojure-hook ()
   (require 'clojure-mode)
   (define-clojure-indent
@@ -122,6 +129,8 @@
   (clojure-hook)
   (add-hook 'clojure-mode-hook 'clojure-hook)
   (add-hook 'clojure-mode-hook 'eldoc-mode)
+  (add-hook 'clojure-mode-hook (lambda () (clj-refactor-mode 1)))
+  (add-hook 'clojure-mode-hook (lambda () (yas-minor-mode 1)))
   (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
 (use-package cider
@@ -173,3 +182,6 @@
 (use-package company-tern
   :ensure t
   :init (add-to-list 'company-backends 'company-tern))
+
+(use-package mustache-mode
+  :ensure t)
