@@ -98,6 +98,7 @@
 
 (defun clojure-hook ()
   (require 'clojure-mode)
+  (setq cljr-suppress-middleware-warnings t)
   (define-clojure-indent
     (defroutes 'defun)
     (defroutes 'defun)
@@ -184,4 +185,7 @@
   :init (add-to-list 'company-backends 'company-tern))
 
 (use-package mustache-mode
+  :ensure t)
+
+(use-package coffee-mode
   :ensure t)
