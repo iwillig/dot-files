@@ -66,6 +66,7 @@
   :ensure t
   :init (autopair-global-mode))
 
+;; ----- Power line
 (use-package powerline
   :ensure t
   :init (setq ns-use-srgb-colorspace nil))
@@ -78,9 +79,21 @@
   :ensure t
   :init (load-space-line))
 
+(use-package minimap
+  :ensure t)
+
+(use-package avy
+  :ensure t)
+
+;; ---- Themes -----
 (use-package spacemacs-theme
   :ensure t
-  :init (load-theme 'spacemacs-dark t))
+  ;;:init (load-theme 'spacemacs-dark t)
+  )
+
+(use-package cyberpunk-theme
+  :ensure t
+  :init (load-theme 'cyberpunk t))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -106,6 +119,7 @@
     (for-all   'defun)
     (fact      'defun)
     (facts     'defun)
+    (against-background 'defun)
     (render    'defun)
     (query     'defun)
     (params    'defun)
