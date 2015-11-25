@@ -33,6 +33,7 @@
 (global-auto-revert-mode t)
 (global-hl-line-mode 1)
 
+(setq ring-bell-function 'ignore)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq whitespace-line-column 250)
 (setq show-trailing-whitespace t)
@@ -86,10 +87,11 @@
   :ensure t)
 
 ;; ---- Themes -----
-(use-package spacemacs-theme
-  :ensure t
-  ;;:init (load-theme 'spacemacs-dark t)
-  )
+
+;; (use-package spacemacs-theme
+;;   :ensure t
+;;   ;;:init (load-theme 'spacemacs-dark t)
+;;   )
 
 (use-package cyberpunk-theme
   :ensure t
@@ -203,3 +205,25 @@
 
 (use-package coffee-mode
   :ensure t)
+
+(use-package ido-vertical-mode
+  :ensure t
+  :init (ido-vertical-mode t))
+
+(defun load-irc [])
+
+(require 'circe)
+(setq circe-network-options
+      `(("Freenode"
+         :nick "iwillig"
+         :channels ("#emacs" "#emacs-circe" "#craftyplans" "#clojure" "#clojurescript" "#datomic")
+         :nickserv-password "")))
+
+(defun irc ()
+  "Connect to IRC"
+  (interactive)
+  (circe "Freenode"))
+
+(use-package circe
+  :ensure t
+  :init (load-irc))
