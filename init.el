@@ -39,6 +39,7 @@
 (setq show-trailing-whitespace t)
 (setq ispell-program-name "aspell")
 (x-focus-frame nil)
+(load-file "~/.emacs.d/private.el")
 
 (progn
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
@@ -210,20 +211,22 @@
   :ensure t
   :init (ido-vertical-mode t))
 
-(defun load-irc [])
+(defun load-irc ()
+  (require 'circe)
+  (load "lui-logging" nil t)
+  (enable-lui-logging-globally)
+  (setq circe-reduce-lurker-spam t)
+  (setq circe-network-options
+        `(("Freenode"
+           :nick "iwillig"
+           :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
+           :nickserv-password ,freenode-password))))
 
-(require 'circe)
-(setq circe-network-options
-      `(("Freenode"
-         :nick "iwillig"
-         :channels ("#emacs" "#emacs-circe" "#craftyplans" "#clojure" "#clojurescript" "#datomic")
-         :nickserv-password "")))
+(use-package circe
+  :ensure t
+  :init (load-irc))
 
 (defun irc ()
   "Connect to IRC"
   (interactive)
   (circe "Freenode"))
-
-(use-package circe
-  :ensure t
-  :init (load-irc))
