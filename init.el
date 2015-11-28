@@ -56,6 +56,10 @@
   :bind ("C-c g" . magit-status)
   :ensure t)
 
+(use-package git-timemachine
+  :bind ("C-c C-g" . git-timemachine)
+  :ensure t)
+
 (use-package eldoc
   :ensure t)
 
