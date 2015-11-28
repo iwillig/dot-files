@@ -52,7 +52,7 @@
 ;; ----- Third Party Packages -----
 (require 'use-package)
 
-(use-package  magit
+(use-package magit
   :bind ("C-c g" . magit-status)
   :ensure t)
 
@@ -68,35 +68,20 @@
   :ensure t
   :init (autopair-global-mode))
 
-;; ----- Power line
-(use-package powerline
-  :ensure t
-  :init (setq ns-use-srgb-colorspace nil))
-
-(defun load-space-line ()
-  (require 'spaceline-config)
-  (spaceline-emacs-theme))
-
-(use-package spaceline
-  :ensure t
-  :init (load-space-line))
+;; ;; ----- Power line ------
+;; (use-package powerline
+;;   :ensure t
+;;   :init (progn
+;;           (require 'powerline)
+;;           (powerline-default-theme)
+;;           (setq ns-use-srgb-colorspace nil)
+;;           ))
 
 (use-package minimap
   :ensure t)
 
 (use-package avy
   :ensure t)
-
-;; ---- Themes -----
-
-;; (use-package spacemacs-theme
-;;   :ensure t
-;;   ;;:init (load-theme 'spacemacs-dark t)
-;;   )
-
-(use-package cyberpunk-theme
-  :ensure t
-  :init (load-theme 'cyberpunk t))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -211,22 +196,31 @@
   :ensure t
   :init (ido-vertical-mode t))
 
-(defun load-irc ()
-  (require 'circe)
-  (load "lui-logging" nil t)
-  (enable-lui-logging-globally)
-  (setq circe-reduce-lurker-spam t)
-  (setq circe-network-options
-        `(("Freenode"
-           :nick "iwillig"
-           :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
-           :nickserv-password ,freenode-password))))
-
 (use-package circe
   :ensure t
-  :init (load-irc))
+  :init (lambda ()
+          (require 'circe)
+          (load "lui-logging" nil t)
+          (enable-lui-logging-globally)
+          (setq circe-reduce-lurker-spam t)
+          (setq circe-network-options
+                `(("Freenode"
+                   :nick "iwillig"
+                   :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
+                   :nickserv-password ,freenode-password)))))
 
 (defun irc ()
   "Connect to IRC"
   (interactive)
   (circe "Freenode"))
+
+;; ----- Themes -----
+
+(use-package ample-theme
+  :init (progn
+          (load-theme 'ample t t)
+          (load-theme 'ample-flat t t)
+          (load-theme 'ample-light t t)
+          (enable-theme 'ample-flat))
+  :defer t
+  :ensure t)
