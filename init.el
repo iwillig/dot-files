@@ -97,9 +97,9 @@
 (use-package yasnippet
   :ensure t)
 
-(use-package clj-refactor
-  :ensure t
-  :init (cljr-add-keybindings-with-prefix "C-c C-m"))
+;; (use-package clj-refactor
+;;   :ensure t
+;;   :init (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (defun clojure-hook ()
   (require 'clojure-mode)
@@ -114,6 +114,7 @@
     (against-background 'defun)
     (render    'defun)
     (query     'defun)
+    (ident     'defun)
     (params    'defun)
     (future-fact 'defun)
     (future-facts 'defun)
@@ -136,8 +137,8 @@
   (clojure-hook)
   (add-hook 'clojure-mode-hook 'clojure-hook)
   (add-hook 'clojure-mode-hook 'eldoc-mode)
-  (add-hook 'clojure-mode-hook (lambda () (clj-refactor-mode 1)))
-  (add-hook 'clojure-mode-hook (lambda () (yas-minor-mode 1)))
+  ;;(add-hook 'clojure-mode-hook (lambda () (clj-refactor-mode 1)))
+  ;;(add-hook 'clojure-mode-hook (lambda () (yas-minor-mode 1)))
   (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
 (use-package cider
@@ -202,16 +203,19 @@
 
 (use-package circe
   :ensure t
-  :init (lambda ()
-          (require 'circe)
-          (load "lui-logging" nil t)
-          (enable-lui-logging-globally)
-          (setq circe-reduce-lurker-spam t)
-          (setq circe-network-options
-                `(("Freenode"
-                   :nick "iwillig"
-                   :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
-                   :nickserv-password ,freenode-password)))))
+  :init )
+
+(defun setup-irc ()
+  (require 'circe)
+  (load "lui-logging" nil t)
+  (enable-lui-logging-globally)
+  (setq circe-reduce-lurker-spam t)
+  (setq circe-network-options
+        `(("Freenode"
+           :nick "iwillig"
+           :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
+           :nickserv-password ,freenode-password))))
+(setup-irc)
 
 (defun irc ()
   "Connect to IRC"
@@ -220,11 +224,15 @@
 
 ;; ----- Themes -----
 
-(use-package ample-theme
-  :init (progn
-          (load-theme 'ample t t)
-          (load-theme 'ample-flat t t)
-          (load-theme 'ample-light t t)
-          (enable-theme 'ample-flat))
-  :defer t
+;; (use-package ample-theme
+;;   :init (progn
+;;           (load-theme 'ample t t)
+;;           (load-theme 'ample-flat t t)
+;;           (load-theme 'ample-light t t)
+;;           (enable-theme 'ample-flat))
+;;   :defer t
+;;   :ensure t)
+
+(use-package grandshell-theme
+  :init (load-theme 'grandshell t)
   :ensure t)
