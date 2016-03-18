@@ -45,7 +45,7 @@
   (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
-(desktop-save-mode 1)
+;;(desktop-save-mode 1)
 
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
@@ -72,14 +72,13 @@
   :ensure t
   :init (autopair-global-mode))
 
-;; ;; ----- Power line ------
-;; (use-package powerline
-;;   :ensure t
-;;   :init (progn
-;;           (require 'powerline)
-;;           (powerline-default-theme)
-;;           (setq ns-use-srgb-colorspace nil)
-;;           ))
+;; ----- Power line ------
+(use-package powerline
+  :ensure t
+  :init (progn
+          (require 'powerline)
+          (powerline-default-theme)
+          (setq ns-use-srgb-colorspace nil)))
 
 (use-package minimap
   :ensure t)
@@ -223,15 +222,6 @@
   (circe "Freenode"))
 
 ;; ----- Themes -----
-
-;; (use-package ample-theme
-;;   :init (progn
-;;           (load-theme 'ample t t)
-;;           (load-theme 'ample-flat t t)
-;;           (load-theme 'ample-light t t)
-;;           (enable-theme 'ample-flat))
-;;   :defer t
-;;   :ensure t)
 
 (use-package grandshell-theme
   :init (load-theme 'grandshell t)
