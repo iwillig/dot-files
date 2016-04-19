@@ -170,17 +170,24 @@
 (use-package restclient
   :ensure t)
 
-(use-package emojify
-  :ensure t
-  :init (add-hook 'after-init-hook #'global-emojify-mode))
-
 (use-package js2-mode
   :ensure t
   :init
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
-  (setq js2-basic-offset 2)
+  (setq js2-basic-offset 4)
   (setq js2-bounce-indent-p t))
+
+(use-package mocha
+  :ensure t)
+
+(custom-set-variables
+ '(safe-local-variable-values
+   (quote
+    ((mocha-project-test-directory . "test")
+     (mocha-options . "--recursive --reporter dot -t 5000")
+     (mocha-environment-variables . "NODE_ENV=test")))))
+
 
 (add-to-list 'load-path "~/opt/tern/emacs")
 (use-package tern
