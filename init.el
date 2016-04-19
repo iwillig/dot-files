@@ -56,6 +56,10 @@
   :bind ("C-c g" . magit-status)
   :ensure t)
 
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
 (use-package git-timemachine
   :bind ("C-c C-g" . git-timemachine)
   :ensure t)
@@ -166,6 +170,9 @@
 (use-package ido
   :ensure t
   :init (ido-mode t))
+
+(use-package markdown-mode
+  :ensure t)
 
 (use-package restclient
   :ensure t)
