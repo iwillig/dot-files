@@ -60,12 +60,12 @@
   :ensure t
   :init (global-flycheck-mode))
 
-(use-package git-timemachine
-  :bind ("C-c C-g" . git-timemachine)
+(use-package indent-guide
   :ensure t)
 
 (use-package eldoc
-  :ensure t)
+  :ensure t
+  :init (indent-guide-global-mode))
 
 (use-package company
   :ensure t
@@ -214,6 +214,19 @@
   :ensure t
   :init (ido-vertical-mode t))
 
+(defun setup-scheme ()
+  (add-hook 'geiser-mode 'rainbow-delimiters-mode))
+
+(use-package quack
+  :ensure t)
+
+(use-package geiser
+  :ensure t
+  :init (setup-scheme))
+
+(use-package indent-guide
+  :ensure t)
+
 (use-package circe
   :ensure t
   :init )
@@ -238,5 +251,9 @@
 ;; ----- Themes -----
 
 (use-package grandshell-theme
-  :init (load-theme 'grandshell t)
+  ;;; :init (load-theme 'grandshell t)
+  :ensure t)
+
+(use-package noctilux-theme
+  :init (load-theme 'noctilux t)
   :ensure t)
