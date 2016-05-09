@@ -193,8 +193,9 @@
    (quote
     ((mocha-project-test-directory . "test")
      (mocha-options . "--recursive --reporter dot -t 5000")
+     (mocha-command . "node_modules/.bin/mocha")
+     (mocha-project-test-directory . "test")
      (mocha-environment-variables . "NODE_ENV=test")))))
-
 
 (add-to-list 'load-path "~/opt/tern/emacs")
 (use-package tern
