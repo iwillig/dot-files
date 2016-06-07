@@ -6,6 +6,8 @@
 ;; #############################################
 
 ;; ----- Package setup -----
+
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
@@ -77,12 +79,14 @@
   :init (autopair-global-mode))
 
 ;; ----- Power line ------
-(use-package powerline
-  :ensure t
-  :init (progn
-          (require 'powerline)
-          (powerline-default-theme)
-          (setq ns-use-srgb-colorspace nil)))
+
+;; (use-package powerline
+;;   :ensure t
+;;   :init (progn
+;;           (require 'powerline)
+;;           (powerline-default-theme)
+;;           ;;(setq ns-use-srgb-colorspace nil)
+;;           ))
 
 (use-package minimap
   :ensure t)
@@ -188,16 +192,8 @@
 (use-package mocha
   :ensure t)
 
-(custom-set-variables
- '(safe-local-variable-values
-   (quote
-    ((mocha-project-test-directory . "test")
-     (mocha-options . "--recursive --reporter dot -t 5000")
-     (mocha-command . "node_modules/.bin/mocha")
-     (mocha-project-test-directory . "test")
-     (mocha-environment-variables . "NODE_ENV=test")))))
-
 (add-to-list 'load-path "~/opt/tern/emacs")
+
 (use-package tern
   :init (add-hook 'js2-mode-hook (lambda () (tern-mode 1))))
 
@@ -251,10 +247,24 @@
 
 ;; ----- Themes -----
 
-(use-package grandshell-theme
-  ;;; :init (load-theme 'grandshell t)
-  :ensure t)
+(load-file "~/.emacs.d/lisp/gruvbox-dark-theme.el")
+(load-theme 'gruvbox-dark t)
 
-(use-package noctilux-theme
-  :init (load-theme 'noctilux t)
-  :ensure t)
+;; (use-package grandshell-theme
+;;   :init (load-theme 'grandshell t)
+;;   :ensure t)
+
+;; (use-package darkokai-theme
+;;   :ensure t
+;;   ;;:config (load-theme 'darkokai t)
+;;   )
+
+(custom-set-variables
+ '(safe-local-variable-values
+   (quote
+    ((mocha-project-test-directory . "test")
+     (mocha-command . "node_modules/.bin/mocha")
+     (mocha-environment-variables . "NODE_ENV=test")
+     (mocha-options . "--recursive --reporter dot -t 5000")
+     (mocha-project-test-directory . "test")
+     (mocha-environment-variables . "NODE_ENV=test")))))
