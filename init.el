@@ -85,6 +85,8 @@
   :ensure t
   :init (global-flycheck-mode))
 
+(setq flycheck-checkers '(javascript-eslint))
+
 (use-package indent-guide
   :ensure t)
 
@@ -101,6 +103,7 @@
   :ensure t
   :init (autopair-global-mode))
 
+<<<<<<< b0abf7b3852e97e498faa9cc1214605e9b7fb8ac
 (use-package neotree
   :ensure t
   :config
@@ -108,6 +111,12 @@
   (setq neo-vc-integration '(face))
   (setq neo-mode-line-type '(neotree))
   (global-set-key [f8] 'neotree-toggle))
+=======
+;; ----- Power line ------
+
+(use-package minimap
+  :ensure t)
+>>>>>>> Stuff
 
 (use-package avy
   :ensure t)
