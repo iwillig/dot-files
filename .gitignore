@@ -4,3 +4,6 @@
 /backups/*
 /places
 /.smex-items
+/ido.last
+/private.el
+url

@@ -1,0 +1,9 @@
+* Things to learn
+
+** C-M-f      forward-sexp
+** C-M-b      backward-sexp
+** C-M-k      kill-sexp
+** C-M-t      transpose-sexps
+** C-M-<SPC>  mark-sexp
+
+** M-m expand region

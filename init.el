@@ -1,5 +1,6 @@
 ;;; package --- Summary:
 ;;; Commentary:
+
 ;; Supports
 ;;    Clojure
 ;;    JavaScript
@@ -14,11 +15,8 @@
 (package-initialize)
 
 ;; ----- Default Front -----
-(set-face-attribute 'default nil
-                    :family "Source Code Pro"
-                    :height 120
-                    :weight 'normal
-                    :width 'normal)
+
+(set-face-attribute 'default nil :family "Liberation Mono")
 
 ;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
@@ -26,30 +24,52 @@
 (windmove-default-keybindings)
 (auto-fill-mode -1)
 
-(setq inhibit-splash-screen t)
-(global-font-lock-mode 1)
+(setq-default
+
+ inhibit-splash-screen t
+ indent-tabs-mode nil
+ ring-bell-function 'ignore
+ whitespace-line-column 250
+ show-trailing-whitespace t
+ ispell-program-name "aspell"
+ gc-cons-threshold 100000000)
 
 (put 'downcase-region 'disabled nil)
-(setq-default indent-tabs-mode nil)
+
+(global-font-lock-mode 1)
 (global-linum-mode 1)
 (global-auto-revert-mode t)
 (global-hl-line-mode 1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
 
-(setq ring-bell-function 'ignore)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(setq whitespace-line-column 250)
-(setq show-trailing-whitespace t)
-(setq ispell-program-name "aspell")
 (x-focus-frame nil)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+
+
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 (load-file "~/.emacs.d/private.el")
 
-(progn
-  (dolist (mode '(tool-bar-mode menu-bar-mode scroll-bar-mode))
-    (when (fboundp mode) (funcall mode -1))))
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-;;(desktop-save-mode 1)
 
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(require 'ido)
+
+(setq ido-enable-prefix nil
+      ido-enable-flex-matching t
+      ido-create-new-buffer 'always
+      ido-use-filename-at-point 'guess
+      ido-max-prospects 10
+      ido-default-file-method 'selected-window
+      ido-auto-merge-work-directories-length -1)
+
+
+(ido-mode +1)
 
 ;; ----- Third Party Packages -----
 (require 'use-package)
@@ -57,6 +77,10 @@
 (use-package magit
   :bind ("C-c g" . magit-status)
   :ensure t)
+
+(use-package diff-hl
+  :ensure t
+  :init ())
 
 (use-package flycheck
   :ensure t
@@ -78,18 +102,13 @@
   :ensure t
   :init (autopair-global-mode))
 
-;; ----- Power line ------
-
-;; (use-package powerline
-;;   :ensure t
-;;   :init (progn
-;;           (require 'powerline)
-;;           (powerline-default-theme)
-;;           ;;(setq ns-use-srgb-colorspace nil)
-;;           ))
-
-(use-package minimap
-  :ensure t)
+(use-package neotree
+  :ensure t
+  :config
+  (setq neo-theme 'nerd)
+  (setq neo-vc-integration '(face))
+  (setq neo-mode-line-type '(neotree))
+  (global-set-key [f8] 'neotree-toggle))
 
 (use-package avy
   :ensure t)
@@ -104,10 +123,7 @@
 (use-package yasnippet
   :ensure t)
 
-;; (use-package clj-refactor
-;;   :ensure t
-;;   :init (cljr-add-keybindings-with-prefix "C-c C-m"))
-
+;; ----- Clojure -----
 (defun clojure-hook ()
   (require 'clojure-mode)
   (setq cljr-suppress-middleware-warnings t)
@@ -144,8 +160,6 @@
   (clojure-hook)
   (add-hook 'clojure-mode-hook 'clojure-hook)
   (add-hook 'clojure-mode-hook 'eldoc-mode)
-  ;;(add-hook 'clojure-mode-hook (lambda () (clj-refactor-mode 1)))
-  ;;(add-hook 'clojure-mode-hook (lambda () (yas-minor-mode 1)))
   (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
 (use-package cider
@@ -161,15 +175,8 @@
 (use-package ag
   :ensure t
   :init
-  (setq ag-highlight-search t)
-  (setq ag-reuse-window 't))
-
-(use-package highlight-sexp
-  :ensure t
-  :init
-  (add-hook 'clojure-mode-hook 'highlight-sexp-mode)
-  (add-hook 'emacs-lisp-mode-hook 'highlight-sexp-mode)
-  (setq hl-sexp-background-color "#2D3235"))
+  (setq ag-highlight-search t
+        ag-reuse-window 't))
 
 (use-package ido
   :ensure t
@@ -186,8 +193,9 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
-  (setq js2-basic-offset 4)
-  (setq js2-bounce-indent-p t))
+
+  (setq js2-basic-offset 2
+        js2-bounce-indent-p t))
 
 (use-package mocha
   :ensure t)
@@ -211,11 +219,12 @@
   :ensure t
   :init (ido-vertical-mode t))
 
-(defun setup-scheme ()
-  (add-hook 'geiser-mode 'rainbow-delimiters-mode))
-
 (use-package quack
   :ensure t)
+
+(defun setup-scheme ()
+
+  (add-hook 'geiser-mode 'rainbow-delimiters-mode))
 
 (use-package geiser
   :ensure t
@@ -225,8 +234,7 @@
   :ensure t)
 
 (use-package circe
-  :ensure t
-  :init )
+  :ensure t)
 
 (defun setup-irc ()
   (require 'circe)
@@ -236,8 +244,13 @@
   (setq circe-network-options
         `(("Freenode"
            :nick "iwillig"
-           :channels ("#craftyplans" "#clojure" "#clojurescript" "#datomic")
+           :channels ("#craftyplans"
+                      "#clojure"
+                      "#postgis"
+                      "#clojurescript"
+                      "#datomic")
            :nickserv-password ,freenode-password))))
+
 (setup-irc)
 
 (defun irc ()
@@ -245,26 +258,35 @@
   (interactive)
   (circe "Freenode"))
 
+(use-package ibuffer-vc
+  :ensure t
+  :config (add-hook 'ibuffer-hook
+                    (lambda ()
+                      (ibuffer-vc-set-filter-groups-by-vc-root)
+                      (unless (eq ibuffer-sorting-mode 'alphabetic)
+                        (ibuffer-do-sort-by-alphabetic)))))
+
+
+(use-package expand-region
+  :ensure t
+  :config (global-set-key (kbd "M-m") 'er/expand-region))
+
+(use-package workgroups2
+  :ensure t
+  ;;:config (workgroups-mode 1)
+  )
+
+(use-package smex
+  :ensure t
+  :config
+  (smex-initialize)
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-x") 'smex-major-mode-commands)
+  )
+
+
 ;; ----- Themes -----
+(use-package afternoon-theme)
 
-(load-file "~/.emacs.d/lisp/gruvbox-dark-theme.el")
-(load-theme 'gruvbox-dark t)
-
-;; (use-package grandshell-theme
-;;   :init (load-theme 'grandshell t)
-;;   :ensure t)
-
-;; (use-package darkokai-theme
-;;   :ensure t
-;;   ;;:config (load-theme 'darkokai t)
-;;   )
-
-(custom-set-variables
- '(safe-local-variable-values
-   (quote
-    ((mocha-project-test-directory . "test")
-     (mocha-command . "node_modules/.bin/mocha")
-     (mocha-environment-variables . "NODE_ENV=test")
-     (mocha-options . "--recursive --reporter dot -t 5000")
-     (mocha-project-test-directory . "test")
-     (mocha-environment-variables . "NODE_ENV=test")))))
+(provide 'init)
+;;;
