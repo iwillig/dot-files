@@ -30,14 +30,16 @@
  indent-tabs-mode nil
  ring-bell-function 'ignore
  whitespace-line-column 250
- show-trailing-whitespace t
  ispell-program-name "aspell"
+
  gc-cons-threshold 100000000)
 
 (put 'downcase-region 'disabled nil)
 
 (global-font-lock-mode 1)
-(global-linum-mode 1)
+
+;; (global-linum-mode 1)
+
 (global-auto-revert-mode t)
 (global-hl-line-mode 1)
 (tool-bar-mode -1)
@@ -49,14 +51,11 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
-
-
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (load-file "~/.emacs.d/private.el")
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-
 
 (require 'ido)
 
@@ -222,13 +221,9 @@
 (use-package quack
   :ensure t)
 
-(defun setup-scheme ()
-
-  (add-hook 'geiser-mode 'rainbow-delimiters-mode))
-
 (use-package geiser
   :ensure t
-  :init (setup-scheme))
+  :config (setq geiser-active-implementations '(guile)))
 
 (use-package indent-guide
   :ensure t)
@@ -245,6 +240,7 @@
         `(("Freenode"
            :nick "iwillig"
            :channels ("#craftyplans"
+                      "#fsf"
                       "#clojure"
                       "#postgis"
                       "#clojurescript"
@@ -266,7 +262,6 @@
                       (unless (eq ibuffer-sorting-mode 'alphabetic)
                         (ibuffer-do-sort-by-alphabetic)))))
 
-
 (use-package expand-region
   :ensure t
   :config (global-set-key (kbd "M-m") 'er/expand-region))
@@ -279,14 +274,37 @@
 (use-package smex
   :ensure t
   :config
-  (smex-initialize)
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "M-x") 'smex-major-mode-commands)
+  ;;(smex-initialize)
+  ;;(global-set-key (kbd "M-x") 'smex)
+  ;;(global-set-key (kbd "M-x") 'smex-major-mode-commands)
   )
 
 
 ;; ----- Themes -----
-(use-package afternoon-theme)
+
+;; (use-package afternoon-theme)
+;; (load-theme 'wombat t)
+(use-package base16-theme
+  :ensure t)
+
+(load-theme 'base16-default-dark t)
+
+;; ----- Social -----
+
+(use-package elfeed
+  :ensure t
+  :config (setq elfeed-feeds
+                '("http://planet.gnu.org/rss20.xml"
+                  "https://hacks.mozilla.org/feed/"
+                  "http://z.caudate.me/rss/"
+                  "http://planet.clojure.in/atom.xml"
+                  "http://planet.lisp.org/rss20.xml"
+                  "http://xkcd.com/rss.xml"
+                  "http://prl.ccs.neu.edu/blog/feeds/all.atom.xml"
+                  "http://www.scheme.dk/planet/atom.xml"
+                  "http://www.universetoday.com/feed/"
+                  "http://lambda-the-ultimate.org/rss.xml"
+                  "http://planet.emacsen.org/atom.xml")))
 
 (provide 'init)
 ;;;

@@ -5,5 +5,4 @@
 ** C-M-k      kill-sexp
 ** C-M-t      transpose-sexps
 ** C-M-<SPC>  mark-sexp
-
 ** M-m expand region
