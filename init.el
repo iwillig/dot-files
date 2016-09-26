@@ -10,8 +10,10 @@
 
 ;;; Code:
 (require 'package)
+
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+
 (package-initialize)
 
 ;; ----- Default Front -----
@@ -67,7 +69,6 @@
       ido-default-file-method 'selected-window
       ido-auto-merge-work-directories-length -1)
 
-
 (ido-mode +1)
 
 ;; ----- Third Party Packages -----
@@ -103,20 +104,10 @@
   :ensure t
   :init (autopair-global-mode))
 
-<<<<<<< b0abf7b3852e97e498faa9cc1214605e9b7fb8ac
-(use-package neotree
-  :ensure t
-  :config
-  (setq neo-theme 'nerd)
-  (setq neo-vc-integration '(face))
-  (setq neo-mode-line-type '(neotree))
-  (global-set-key [f8] 'neotree-toggle))
-=======
 ;; ----- Power line ------
 
 (use-package minimap
   :ensure t)
->>>>>>> Stuff
 
 (use-package avy
   :ensure t)
@@ -201,6 +192,7 @@
   :init
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+
 
   (setq js2-basic-offset 2
         js2-bounce-indent-p t))
@@ -298,6 +290,13 @@
 
 (load-theme 'base16-default-dark t)
 
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (sml/setup)
+  (setq sml/theme 'dark)
+  )
+
 ;; ----- Social -----
 
 (use-package elfeed
@@ -317,3 +316,17 @@
 
 (provide 'init)
 ;;;
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
