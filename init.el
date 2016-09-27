@@ -317,8 +317,9 @@
 
 (require 'cider)
 
-
-
+(use-package define-word
+  :ensure t
+  :config (global-set-key (kbd "C-c d") 'define-word-at-point))
 
 ;; ----- Social -----
 
