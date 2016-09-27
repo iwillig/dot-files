@@ -53,6 +53,7 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
+
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (load-file "~/.emacs.d/private.el")
@@ -280,11 +281,16 @@
   ;;(global-set-key (kbd "M-x") 'smex-major-mode-commands)
   )
 
+(use-package bnfc
+  :ensure t)
+
+;; ----- -----
+
+(require 'eshell)
+(require 'em-smart)
 
 ;; ----- Themes -----
 
-;; (use-package afternoon-theme)
-;; (load-theme 'wombat t)
 (use-package base16-theme
   :ensure t)
 
@@ -303,6 +309,7 @@
   :ensure t
   :config (setq elfeed-feeds
                 '("http://planet.gnu.org/rss20.xml"
+                  "http://jvns.ca/atom.xml"
                   "https://hacks.mozilla.org/feed/"
                   "http://z.caudate.me/rss/"
                   "http://planet.clojure.in/atom.xml"
