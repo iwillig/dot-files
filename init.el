@@ -294,6 +294,9 @@
 (use-package base16-theme
   :ensure t)
 
+;; (use-package leuven-theme
+;;   :ensure t)
+
 (load-theme 'base16-default-dark t)
 
 (use-package smart-mode-line
@@ -305,21 +308,45 @@
   (setq sml/theme 'dark)
   )
 
-;; Org mode!
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((sql . t)))
-
-(setq org-src-fontify-natively t)
-(require 'ob-clojure)
-
-(setq org-babel-clojure-backend 'cider)
-
-(require 'cider)
+(use-package slime
+  :ensure t)
 
 (use-package define-word
   :ensure t
   :config (global-set-key (kbd "C-c d") 'define-word-at-point))
+
+
+(require 'ob-clojure)
+(require 'cider)
+(require 'ob)
+
+;; Org mode!
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((sql . t)
+   (clojure . t)))
+
+(add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
+
+(setq org-edit-src-content-indentation 0
+      org-src-tab-acts-natively t
+      org-src-fontify-natively t
+      org-babel-clojure-backend 'cider
+      org-confirm-babel-evaluate nil)
+
+(defvar org-babel-default-header-args:clojure
+  '((:results . "silent")))
+
+(defun org-babel-execute:clojure (body params)
+  (print body params)
+  (cider-interactive-eval body))
+
+(add-hook 'org-src-mode-hook
+          '(lambda ()
+             (set (make-local-variable 'cider-buffer-ns)
+                  (with-current-buffer
+                      (overlay-buffer org-edit-src-overlay)
+                    cider-buffer-ns))))
 
 ;; ----- Social -----
 
