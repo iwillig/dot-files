@@ -25,6 +25,7 @@
 (show-paren-mode t)
 (windmove-default-keybindings)
 (auto-fill-mode -1)
+(global-prettify-symbols-mode +1)
 
 (setq-default
 
@@ -47,7 +48,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-
+(global-linum-mode t)
 (x-focus-frame nil)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -230,6 +231,8 @@
 (use-package indent-guide
   :ensure t)
 
+
+
 (use-package circe
   :ensure t)
 
@@ -294,10 +297,13 @@
 (use-package base16-theme
   :ensure t)
 
+(use-package darktooth-theme
+  :ensure t)
+
+
 ;; (use-package leuven-theme
 ;;   :ensure t)
 
-(load-theme 'base16-default-dark t)
 
 (use-package smart-mode-line
   :ensure t

@@ -1,5 +1,4 @@
 * Things to learn
-
 ** C-M-f      forward-sexp
 ** C-M-b      backward-sexp
 ** C-M-k      kill-sexp
