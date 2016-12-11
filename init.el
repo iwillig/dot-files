@@ -200,6 +200,7 @@
   :ensure t
   :init
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode))
   (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
 
@@ -238,34 +239,6 @@
 (use-package indent-guide
   :ensure t)
 
-
-
-(use-package circe
-  :ensure t)
-
-(defun setup-irc ()
-  (require 'circe)
-  (load "lui-logging" nil t)
-  (enable-lui-logging-globally)
-  (setq circe-reduce-lurker-spam t)
-  (setq circe-network-options
-        `(("Freenode"
-           :nick "iwillig"
-           :channels ("#craftyplans"
-                      "#fsf"
-                      "#clojure"
-                      "#postgis"
-                      "#clojurescript"
-                      "#datomic")
-           :nickserv-password ,freenode-password))))
-
-(setup-irc)
-
-(defun irc ()
-  "Connect to IRC"
-  (interactive)
-  (circe "Freenode"))
-
 (use-package ibuffer-vc
   :ensure t
   :config (add-hook 'ibuffer-hook
@@ -301,25 +274,15 @@
 
 ;; ----- Themes -----
 
-(use-package base16-theme
+(use-package material-theme
   :ensure t)
-
-(use-package darktooth-theme
-  :ensure t)
-
-
-;; (use-package leuven-theme
-;;   :ensure t)
-
 
 (use-package smart-mode-line
   :ensure t
   :config
-
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
-  (setq sml/theme 'dark)
-  )
+  (setq sml/theme 'dark))
 
 (use-package slime
   :ensure t)
