@@ -16,9 +16,16 @@
 
 (package-initialize)
 
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(when (not (package-installed-p 'use-package))
+  (message "Installing use package")
+  (package-install 'use-package))
+
 ;; ----- Default Front -----
 
-(set-face-attribute 'default nil :family "Liberation Mono")
+;; (set-face-attribute 'default nil :family "Liberation Mono")
 
 ;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
