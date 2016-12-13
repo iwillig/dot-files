@@ -28,8 +28,6 @@
 
 ;; ----- Default Front -----
 
-;; (set-face-attribute 'default nil :family "Liberation Mono")
-
 ;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
 (show-paren-mode t)
@@ -186,6 +184,7 @@
   (setq ag-highlight-search t
         ag-reuse-window 't))
 
+
 (use-package ido
   :ensure t
   :init (ido-mode t))
@@ -196,28 +195,33 @@
 (use-package restclient
   :ensure t)
 
+;; ----- Javascript -----
+
 (use-package js2-mode
   :ensure t
   :init
+
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode))
-  (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 
+  (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+  (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
 
   (setq js2-basic-offset 2
         js2-bounce-indent-p t))
 
-(use-package mocha
-  :ensure t)
+;; (add-to-list 'load-path "~/opt/tern/emacs")
 
-(add-to-list 'load-path "~/opt/tern/emacs")
+;; (use-package tern
+;;   :init (add-hook 'js2-mode-hook (lambda () (tern-mode 1))))
 
-(use-package tern
-  :init (add-hook 'js2-mode-hook (lambda () (tern-mode 1))))
+;; (use-package company-tern
+;;   :ensure t
+;;   :init (add-to-list 'company-backends 'company-tern))
 
-(use-package company-tern
-  :ensure t
-  :init (add-to-list 'company-backends 'company-tern))
+
+
 
 (use-package mustache-mode
   :ensure t)
