@@ -64,7 +64,6 @@
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-(load-file "~/.emacs.d/private.el")
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -277,6 +276,9 @@
 (use-package material-theme
   :ensure t)
 
+;; (use-package cyberpunk-theme
+;;   :ensure t)
+
 (use-package smart-mode-line
   :ensure t
   :config
@@ -323,6 +325,10 @@
                   (with-current-buffer
                       (overlay-buffer org-edit-src-overlay)
                     cider-buffer-ns))))
+
+(use-package git-gutter
+  :ensure t
+  :init (global-git-gutter-mode +1))
 
 ;; ----- Social -----
 
