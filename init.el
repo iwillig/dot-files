@@ -61,9 +61,7 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 
-
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -250,19 +248,6 @@
   :ensure t
   :config (global-set-key (kbd "M-m") 'er/expand-region))
 
-(use-package workgroups2
-  :ensure t
-  ;;:config (workgroups-mode 1)
-  )
-
-(use-package smex
-  :ensure t
-  :config
-  ;;(smex-initialize)
-  ;;(global-set-key (kbd "M-x") 'smex)
-  ;;(global-set-key (kbd "M-x") 'smex-major-mode-commands)
-  )
-
 (use-package bnfc
   :ensure t)
 
@@ -275,9 +260,6 @@
 
 (use-package material-theme
   :ensure t)
-
-;; (use-package cyberpunk-theme
-;;   :ensure t)
 
 (use-package smart-mode-line
   :ensure t
@@ -292,7 +274,6 @@
 (use-package define-word
   :ensure t
   :config (global-set-key (kbd "C-c d") 'define-word-at-point))
-
 
 (require 'ob-clojure)
 (require 'cider)
@@ -329,24 +310,6 @@
 (use-package git-gutter
   :ensure t
   :init (global-git-gutter-mode +1))
-
-;; ----- Social -----
-
-(use-package elfeed
-  :ensure t
-  :config (setq elfeed-feeds
-                '("http://planet.gnu.org/rss20.xml"
-                  "http://jvns.ca/atom.xml"
-                  "https://hacks.mozilla.org/feed/"
-                  "http://z.caudate.me/rss/"
-                  "http://planet.clojure.in/atom.xml"
-                  "http://planet.lisp.org/rss20.xml"
-                  "http://xkcd.com/rss.xml"
-                  "http://prl.ccs.neu.edu/blog/feeds/all.atom.xml"
-                  "http://www.scheme.dk/planet/atom.xml"
-                  "http://www.universetoday.com/feed/"
-                  "http://lambda-the-ultimate.org/rss.xml"
-                  "http://planet.emacsen.org/atom.xml")))
 
 (provide 'init)
 ;;;
