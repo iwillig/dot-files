@@ -184,7 +184,6 @@
   (setq ag-highlight-search t
         ag-reuse-window 't))
 
-
 (use-package ido
   :ensure t
   :init (ido-mode t))
@@ -268,19 +267,22 @@
 (use-package material-theme
   :ensure t)
 
-(use-package smart-mode-line
+(use-package spaceline
   :ensure t
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup)
-  (setq sml/theme 'dark))
+  :init
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
 
+;; ----- Common Lisp -----
 (use-package slime
   :ensure t)
 
+;; ----- Other stuff -----
 (use-package define-word
   :ensure t
   :config (global-set-key (kbd "C-c d") 'define-word-at-point))
+
+;; ----- Org mode -----
 
 (require 'ob-clojure)
 (require 'cider)
