@@ -211,17 +211,8 @@
   (setq js2-basic-offset 2
         js2-bounce-indent-p t))
 
-;; (add-to-list 'load-path "~/opt/tern/emacs")
-
-;; (use-package tern
-;;   :init (add-hook 'js2-mode-hook (lambda () (tern-mode 1))))
-
-;; (use-package company-tern
-;;   :ensure t
-;;   :init (add-to-list 'company-backends 'company-tern))
-
-
-
+(use-package feature-mode
+  :ensure t)
 
 (use-package mustache-mode
   :ensure t)
