@@ -171,6 +171,7 @@
 (use-package cider
   :ensure t
   :init
+  (setq cider-test-show-report-on-success t)
   (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 (use-package paredit
@@ -264,8 +265,12 @@
 
 ;; ----- Themes -----
 
-(use-package material-theme
-  :ensure t)
+;; (use-package material-theme
+;;   :ensure t)
+
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t
+  :init (color-theme-sanityinc-tomorrow-night))
 
 (use-package spaceline
   :ensure t
@@ -281,6 +286,9 @@
 (use-package define-word
   :ensure t
   :config (global-set-key (kbd "C-c d") 'define-word-at-point))
+
+(use-package yaml-mode
+  :ensure t)
 
 ;; ----- Org mode -----
 
