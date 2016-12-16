@@ -172,6 +172,7 @@
   :ensure t
   :init
   (setq cider-test-show-report-on-success t)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 (use-package paredit
