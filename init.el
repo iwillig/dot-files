@@ -20,13 +20,18 @@
 (package-initialize)
 
 (when (not package-archive-contents)
+  (message ";; Refreshing the package archives")
   (package-refresh-contents))
 
 (when (not (package-installed-p 'use-package))
-  (message "Installing use package")
+  (message ";; Installing use package")
   (package-install 'use-package))
 
 ;; ----- Default Front -----
+
+(when (string-equal system-type "gnu/linux")
+  (message ";; Setting the front on linux")
+  (set-face-attribute 'default nil :height 112))
 
 ;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
@@ -34,6 +39,9 @@
 (windmove-default-keybindings)
 (auto-fill-mode -1)
 (global-prettify-symbols-mode +1)
+
+(setq echo-keystrokes 0.01)
+
 
 (setq-default
 
@@ -257,18 +265,16 @@
 
 ;; ----- Themes -----
 
-;; (use-package material-theme
-;;   :ensure t)
-
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
   :init (color-theme-sanityinc-tomorrow-night))
 
-(use-package spaceline
-  :ensure t
-  :init
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+(when (string-equal system-type "gnu/liunx")
+  (use-package spaceline
+    :ensure t
+    :init
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme)))
 
 ;; ----- Common Lisp -----
 (use-package slime
