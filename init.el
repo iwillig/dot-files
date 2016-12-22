@@ -269,7 +269,7 @@
   :ensure t
   :init (color-theme-sanityinc-tomorrow-night))
 
-(when (string-equal system-type "gnu/liunx")
+(when (string-equal system-type "gnu/linux")
   (use-package spaceline
     :ensure t
     :init
