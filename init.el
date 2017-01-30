@@ -210,7 +210,7 @@
   :ensure t
   :init
 
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-jsx-mode))
   (add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js2-jsx-mode))
 
@@ -265,9 +265,9 @@
 
 ;; ----- Themes -----
 
-(use-package color-theme-sanityinc-tomorrow
+(use-package material-theme
   :ensure t
-  :init (color-theme-sanityinc-tomorrow-night))
+  :init (load-theme 'material t))
 
 (when (string-equal system-type "gnu/linux")
   (use-package spaceline
@@ -325,6 +325,9 @@
 (use-package git-gutter
   :ensure t
   :init (global-git-gutter-mode +1))
+
+
+
 
 (provide 'init)
 ;;;
