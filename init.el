@@ -29,6 +29,38 @@
 
 ;; ----- Default Front -----
 
+(set-default-font "Fira Code")
+
+(let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+               (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+               (36 . ".\\(?:>\\)")
+               (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+               (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+               (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+               (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+               (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+               (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+               (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+               (48 . ".\\(?:x[a-zA-Z]\\)")
+               (58 . ".\\(?:::\\|[:=]\\)")
+               (59 . ".\\(?:;;\\|;\\)")
+               (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+               (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+               (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+               (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+               (91 . ".\\(?:]\\)")
+               (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+               (94 . ".\\(?:=\\)")
+               (119 . ".\\(?:ww\\)")
+               (123 . ".\\(?:-\\)")
+               (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+               (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+               )
+             ))
+  (dolist (char-regexp alist)
+    (set-char-table-range composition-function-table (car char-regexp)
+                          `([,(cdr char-regexp) 0 font-shape-gstring]))))
+
 (when (string-equal system-type "gnu/linux")
   (message ";; Setting the front on linux")
   (set-face-attribute 'default nil :height 112))
@@ -140,7 +172,11 @@
 ;; ----- Clojure -----
 (defun clojure-hook ()
   (require 'clojure-mode)
-  (setq cljr-suppress-middleware-warnings t)
+
+  (require 'clj-refactor)
+  (cljr-add-keybindings-with-prefix "C-c C-m")
+  (clj-refactor-mode 1)
+
   (define-clojure-indent
     (defroutes 'defun)
     (defroutes 'defun)
@@ -265,9 +301,9 @@
 
 ;; ----- Themes -----
 
-(use-package material-theme
+(use-package solarized-theme
   :ensure t
-  :init (load-theme 'material t))
+  :config (load-theme 'solarized-dark t))
 
 (when (string-equal system-type "gnu/linux")
   (use-package spaceline
@@ -325,9 +361,3 @@
 (use-package git-gutter
   :ensure t
   :init (global-git-gutter-mode +1))
-
-
-
-
-(provide 'init)
-;;;
