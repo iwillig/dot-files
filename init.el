@@ -29,41 +29,7 @@
 
 ;; ----- Default Front -----
 
-(set-default-font "Fira Code")
-
-(let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
-               (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
-               (36 . ".\\(?:>\\)")
-               (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
-               (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
-               (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
-               (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
-               (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
-               (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
-               (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
-               (48 . ".\\(?:x[a-zA-Z]\\)")
-               (58 . ".\\(?:::\\|[:=]\\)")
-               (59 . ".\\(?:;;\\|;\\)")
-               (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
-               (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
-               (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
-               (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
-               (91 . ".\\(?:]\\)")
-               (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
-               (94 . ".\\(?:=\\)")
-               (119 . ".\\(?:ww\\)")
-               (123 . ".\\(?:-\\)")
-               (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
-               (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
-               )
-             ))
-  (dolist (char-regexp alist)
-    (set-char-table-range composition-function-table (car char-regexp)
-                          `([,(cdr char-regexp) 0 font-shape-gstring]))))
-
-(when (string-equal system-type "gnu/linux")
-  (message ";; Setting the front on linux")
-  (set-face-attribute 'default nil :height 112))
+(set-face-attribute 'default nil :height 220)
 
 ;; ----- Defaults -----
 (prefer-coding-system 'utf-8)
@@ -172,11 +138,6 @@
 ;; ----- Clojure -----
 (defun clojure-hook ()
   (require 'clojure-mode)
-
-  (require 'clj-refactor)
-  (cljr-add-keybindings-with-prefix "C-c C-m")
-  (clj-refactor-mode 1)
-
   (define-clojure-indent
     (defroutes 'defun)
     (defroutes 'defun)
@@ -254,6 +215,7 @@
   (add-to-list 'interpreter-mode-alist '("node" . js2-jsx-mode))
 
   (setq js2-basic-offset 2
+        js-indent-level 2
         js2-bounce-indent-p t))
 
 (use-package feature-mode
@@ -301,16 +263,15 @@
 
 ;; ----- Themes -----
 
-(use-package solarized-theme
+(use-package ample-theme
   :ensure t
-  :config (load-theme 'solarized-dark t))
+  :config (load-theme 'ample t t))
 
-(when (string-equal system-type "gnu/linux")
-  (use-package spaceline
-    :ensure t
-    :init
-    (require 'spaceline-config)
-    (spaceline-spacemacs-theme)))
+(use-package spaceline
+  :ensure t
+  :init
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
 
 ;; ----- Common Lisp -----
 (use-package slime
@@ -322,6 +283,9 @@
   :config (global-set-key (kbd "C-c d") 'define-word-at-point))
 
 (use-package yaml-mode
+  :ensure t)
+
+(use-package terraform-mode
   :ensure t)
 
 ;; ----- Org mode -----
@@ -357,7 +321,3 @@
                   (with-current-buffer
                       (overlay-buffer org-edit-src-overlay)
                     cider-buffer-ns))))
-
-(use-package git-gutter
-  :ensure t
-  :init (global-git-gutter-mode +1))
