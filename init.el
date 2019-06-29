@@ -165,6 +165,34 @@
     (context 2)
     (context 'defun)))
 
+(defun clojure-sort-ns ()
+ "Internally sort each sexp inside the ns form."
+ (interactive)
+ (comment-normalize-vars)
+ (if (clojure-find-ns)
+   (save-excursion
+    (goto-char (match-beginning 0))
+;    (redisplay)
+    (let ((beg (point))
+       (ns))
+     (forward-sexp 1)
+     (setq ns (buffer-substring beg (point)))
+     (forward-char -1)
+     (while (progn (forward-sexp -1)
+            (looking-at "(:[a-z]"))
+      (save-excursion
+       (forward-char 1)
+       (forward-sexp 1)
+       (clojure--sort-following-sexps)))
+     (goto-char beg)
+     (if (looking-at (regexp-quote ns))
+       (message "ns form is already sorted")
+      (sleep-for 0.1)
+ ;      (redisplay)
+      (message "ns form has been sorted")
+      (sleep-for 0.1))))
+   (user-error "Namespace not found")))
+
 (use-package clojure-mode
   :ensure t
   :init
